@@ -1,0 +1,12 @@
+Category,Style,Formal,Semi_Formal,Casual,Day_Out,Night_Out
+Bottom,Pants,15,15,5,0,10
+Bottom,Jeans,5,10,15,10,15
+Bottom,Shorts,0,0,10,15,0
+Top,Dress_Shirt,15,15,5,0,5
+Top,Casual_Button_Down_Shirt,5,10,10,10,15
+Top,Polo,5,10,15,5,10
+Top,T_Shirt_Short_Sleeve,0,0,10,15,5
+Top,T_Shirt_Long_Sleeve,0,5,10,5,10
+Top,Sweater_And_Sweatshirt,0,5,10,10,5
+Top,Coat_And_Jacket_Light,15,15,5,0,10
+Top,Coat_And_Jacket_Heavy,5,5,5,5,10

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string-array name="styles">
+        <item>Sexy</item>
+        <item>Modern</item>
+        <item>Rock</item>
+        <item>-style-</item>
+    </string-array>
+    
+    <string-array name="laundry_schedule_1">
+        <item>weekly</item>
+        <item>biweekly</item>
+        <item>-laundry schedule week-</item>
+    </string-array>
+    
+    <string-array name="laundry_schedule_2">
+        <item>monday</item>
+        <item>tuesday</item>
+        <item>wednesday</item>
+        <item>thursday</item>
+        <item>friday</item>
+        <item>saturday</item>
+        <item>sunday</item>
+        <item>-laundry schedule day-</item>
+    </string-array>
+    
+    <string-array name="relationship_status">
+        <item>single</item>
+        <item>in a relationship</item>
+        <item>married</item>
+        <item>-relationship status (optional)-</item>
+    </string-array>
+    
+    <string-array name="hair_color">
+        <item>black</item>
+        <item>blone</item>
+        <item>brown</item>
+        <item>gray</item>
+        <item>red</item>
+        <item>white</item>
+        <item>-hair color-</item>
+    </string-array>
+    
+    <string-array name="tops_size">
+        <item>XXS</item>
+        <item>XS</item>
+        <item>S</item>
+        <item>M</item>
+        <item>L</item>
+        <item>XL</item>
+        <item>2XL</item>
+        <item>3XL</item>
+        <item>-tops size-</item>
+    </string-array>
+    
+    <string-array name="bottoms_size">
+        <item>XXS</item>
+        <item>XS</item>
+        <item>S</item>
+        <item>M</item>
+        <item>L</item>
+        <item>XL</item>
+        <item>2XL</item>
+        <item>3XL</item>
+        <item>-bottoms size-</item>
+    </string-array>
+    
+    <string-array name="dresses_size">
+        <item>XS</item>
+        <item>S</item>
+        <item>M</item>
+        <item>L</item>
+        <item>XL</item>
+        <item>-dresses size-</item>
+    </string-array>
+    
+    <string-array name="shoes_size">
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>-shoes size-</item>
+    </string-array>
+    
+    <string-array name="categories">
+        <item>Jacket</item>
+        <item>Tops</item>
+        <item>Bottoms</item>
+        <item>-category-</item>
+    </string-array>
+    
+    <string-array name="materials">
+        <item>cotton</item>
+        <item>silk</item>
+        <item>-material-</item>
+    </string-array>
+    
+    <string-array name="occations">
+        <item>nigh out</item>
+        <item>day out</item>
+        <item>casual</item>
+        <item>formal/semiformal</item>
+    </string-array>
+    
+    <string-array name="colors">
+        <item>red</item>
+        <item>green</item>
+        <item>blue</item>
+        <item>beige</item>
+        <item>-color-</item>
+    </string-array>
+    
+    <array name="brands">
+        <item>Adidas</item>
+        <item>Nike</item>
+        <item>DKNY</item>
+        <item>-brand-</item>
+    </array>
+    
+    <array name="item_styles">
+        <item>collar</item>
+        <item>blouse short sleeve</item>
+        <item>-style-</item>
+    </array>
+    
+</resources>

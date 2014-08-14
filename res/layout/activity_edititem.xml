@@ -1,0 +1,254 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/register_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:context="com.adl.closetstylist.ui.RegisterActivity" >
+
+        <RelativeLayout
+            android:id="@+id/edititem_image_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/item_image"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/sample_top" />
+
+            <ImageButton
+                android:id="@+id/btn_add_item_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_add_img" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/app_background" />
+
+        <RelativeLayout
+            android:id="@+id/edititem_details"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="2"
+            android:background="@drawable/section_bg" >
+            
+            <CheckBox
+                android:id="@+id/item_dirty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="left"
+                android:hint="item is dirty"
+                android:text="dirty"
+                android:textColor="@color/register_textcolor"
+                android:textColorHint="@color/register_texthintcolor"
+                android:textSize="@dimen/register_textsize" />
+
+            <EditText
+                android:id="@+id/item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_below="@id/item_dirty"
+                android:gravity="left"
+                android:hint="item name"
+                android:textColor="@color/register_textcolor"
+                android:textColorHint="@color/register_texthintcolor"
+                android:textSize="@dimen/register_textsize" />
+
+            <EditText
+                android:id="@+id/item_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/item_name"
+                android:layout_marginBottom="10dp"
+                android:gravity="left"
+                android:hint="description"
+                android:textColor="@color/register_textcolor"
+                android:textColorHint="@color/register_texthintcolor"
+                android:textSize="@dimen/register_textsize" />
+
+            <Spinner
+                android:id="@+id/item_category"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/register_spinner_height"
+                android:layout_below="@id/item_description"
+                android:layout_marginBottom="10dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:id="@+id/fakeid_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/item_category"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:text="temp. max (F)"
+                android:textColor="@color/register_texthintcolor"
+                android:textSize="@dimen/register_textsize" />
+
+            <EditText
+                android:id="@+id/item_max_temp"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/fakeid_1"
+                android:layout_below="@id/item_category"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/fakeid_1"
+                android:inputType="number"
+                android:textSize="@dimen/register_textsize" />
+
+            <TextView
+                android:id="@+id/fakeid_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@id/fakeid_1"
+                android:layout_below="@id/item_max_temp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:text="temp. min (F)"
+                android:textColor="@color/register_texthintcolor"
+                android:textSize="@dimen/register_textsize" />
+
+            <EditText
+                android:id="@+id/item_min_temp"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/fakeid_2"
+                android:layout_below="@id/item_max_temp"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/fakeid_2"
+                android:inputType="number"
+                android:textSize="@dimen/register_textsize" />
+
+            <TextView
+                android:id="@+id/fakeid_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@id/fakeid_2"
+                android:layout_below="@id/fakeid_2"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:text="age"
+                android:textColor="@color/register_texthintcolor"
+                android:textSize="@dimen/register_textsize" />
+
+            <EditText
+                android:id="@+id/item_age"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/fakeid_3"
+                android:layout_below="@id/fakeid_2"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/fakeid_3"
+                android:inputType="number"
+                android:textSize="@dimen/register_textsize" />
+            
+            <TextView
+                android:id="@+id/fakeid_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@id/fakeid_3"
+                android:layout_below="@id/fakeid_3"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:text="Brand"
+                android:textColor="@color/register_texthintcolor"
+                android:textSize="@dimen/register_textsize" />
+
+            <EditText
+                android:id="@+id/item_brand"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/fakeid_4"
+                android:layout_below="@id/fakeid_3"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/fakeid_4"
+                android:inputType="number"
+                android:textSize="@dimen/register_textsize" />
+
+            <Spinner
+                android:id="@+id/item_color"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/register_spinner_height"
+                android:layout_below="@id/fakeid_4"
+                android:entries="@array/colors"
+                android:spinnerMode="dropdown" />
+
+            <Spinner
+                android:id="@+id/item_style"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/register_spinner_height"
+                android:layout_below="@id/item_color"
+                android:entries="@array/item_styles"
+                android:spinnerMode="dropdown" />
+            
+            <Spinner
+                android:id="@+id/item_material"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/register_spinner_height"
+                android:layout_below="@id/item_style"
+                android:spinnerMode="dropdown" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/button_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ab_bg"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_reset"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="RESET"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="SAVE"
+                android:textColor="@android:color/white" />
+            
+            <Button
+                android:id="@+id/btn_delete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="DELETE"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

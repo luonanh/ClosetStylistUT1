@@ -1,0 +1,228 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    android:gravity="top"
+    android:orientation="vertical"
+    tools:context="com.adl.closetstylist.ui.actionfragment.DashboardFragment" >
+
+    <RelativeLayout
+        android:id="@+id/weather_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1" >
+
+        <RelativeLayout
+            android:id="@+id/weather1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true" 
+            android:background="@color/app_background">
+
+            <ImageView
+                android:id="@+id/icn_pin_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:contentDescription="place icon"
+                android:baselineAlignBottom="true"
+                android:gravity="top"
+                android:padding="0dp"
+                android:src="@drawable/icn_pin_location" />
+
+            <TextView
+                android:id="@+id/weather_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/icn_pin_location"
+                android:layout_alignBaseline="@id/icn_pin_location"
+                android:gravity="center_horizontal"
+                android:paddingLeft="5dp"
+                android:text="Chicago, IL"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/weather_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/weather_location"
+                android:gravity="center_horizontal"
+                android:paddingLeft="5dp"
+                android:text="Jan 02, Wednesday"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/weather_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="center_horizontal"
+                android:text="Sunshowers"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/weather_min_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/weather_type"
+                android:gravity="center_horizontal"
+                android:text="0"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/weather_max_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weather_type"
+                android:layout_toLeftOf="@id/weather_min_temp"
+                android:gravity="center_horizontal"
+                android:paddingRight="10dp"
+                android:text="100"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            
+            <TextView
+                android:id="@+id/weather_current_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:paddingRight="80dp"
+                android:text="50"
+                android:textColor="@android:color/white"
+                android:textSize="35sp"
+                android:textStyle="bold" />
+
+           <ImageView
+                android:id="@+id/weather_current_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/weather_current_temp"
+                android:layout_alignBaseline="@id/weather_current_temp"
+                android:paddingRight="5dp"
+                android:baselineAlignBottom="true"
+                android:src="@drawable/icn_sunshowers" />
+        </RelativeLayout>
+        
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.5"
+        android:background="@color/app_background"
+        android:gravity="top"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/action_outfitoftheday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/app_background"
+            android:gravity="top"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/app_background"
+                android:contentDescription="@string/outfitoftheday"
+                android:gravity="top"
+                android:padding="0dp"
+                android:src="@drawable/icn_outfitoftheday" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/app_background"
+                android:gravity="center_horizontal"
+                android:singleLine="false"
+                android:text="@string/outfitoftheday"
+                android:textColor="@android:color/white"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
+            android:background="@color/drawer_divider_color" />
+
+        <LinearLayout
+            android:id="@+id/action_mycloset"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/app_background"
+            android:gravity="top"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/app_background"
+                android:contentDescription="@string/mycloset"
+                android:gravity="top"
+                android:padding="0dp"
+                android:src="@drawable/icn_my_closet" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/app_background"
+                android:gravity="center_horizontal"
+                android:singleLine="false"
+                android:text="@string/mycloset"
+                android:textColor="@android:color/white"
+                android:textSize="30sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/drawer_divider_color" />
+
+    <LinearLayout
+        android:id="@+id/action_mylaundrybag"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="3"
+        android:background="@color/app_background"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/app_background"
+            android:contentDescription="@string/mylaundrybag"
+            android:gravity="top"
+            android:padding="0dp"
+            android:src="@drawable/icn_laundry_bag" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/app_background"
+            android:gravity="center_horizontal"
+            android:paddingBottom="20dp"
+            android:singleLine="false"
+            android:text="@string/mylaundrybag"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+</LinearLayout>

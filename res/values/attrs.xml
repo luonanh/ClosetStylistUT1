@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ImageAndTwoLineItem">
+        <attr name="main_text" format="string" />
+        <attr name="sub_text" format="string" />
+    </declare-styleable>
+    
+    <color name="text_tab_color">#36495C</color>
+    <color name="app_background">#36495C</color>
+    <color name="drawer_divider_color">#486480</color>
+    <color name="register_background">#D8D8D8</color>
+    <color name="register_textcolor">#000000</color>
+    <color name="register_texthintcolor">#7D7D7D</color>
+    <color name="register_heading_color">#3EBD9C</color>
+
+</resources>

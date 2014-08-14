@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/register_menu_load_male"
+        android:title="@string/register_menu_load_male"/>
+    <item
+        android:id="@+id/register_menu_load_female"
+        android:title="@string/register_menu_load_female"/>
+</menu>
