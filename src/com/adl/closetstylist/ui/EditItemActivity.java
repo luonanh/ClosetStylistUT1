@@ -826,7 +826,7 @@ public class EditItemActivity extends Activity {
 				ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString()),
 				cropImagePath.toString())
 				.brand(itemBrand.getText().toString())
-				.age(1)
+				.age(Double.valueOf(itemAge.getText().toString()))
 				// ALDBG to do.age(Double.valueOf(age.getSelectedItem().toString()))
 				.material(ItemMaterialEnum.valueOf(itemMaterial.getSelectedItem().toString()))
 				.style(ItemStyleEnum.valueOf(itemStyle.getSelectedItem().toString()));
