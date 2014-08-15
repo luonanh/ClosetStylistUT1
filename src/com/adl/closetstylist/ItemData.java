@@ -369,6 +369,28 @@ public class ItemData implements Parcelable {
 				+ wornHistory.toString();
 	}
 	
+	public static int getCropHeightFromCategory(ItemCategoryEnum c) {
+		switch (c) {
+		case Top:
+			return 100;
+		case Bottom:
+			return 100;
+		default:
+			return 100;
+		}
+	}
+	
+	public static int getCropWidthFromCategory(ItemCategoryEnum c) {
+		switch (c) {
+		case Top:
+			return 100;
+		case Bottom:
+			return 100;
+		default:
+			return 100;
+		}
+	}
+	
 	// per http://developer.android.com/reference/java/util/Date.html and
 	// http://stackoverflow.com/questions/136419/get-integer-value-of-the-current-year-in-java
 	public static double getCurrentYear() {

@@ -71,6 +71,10 @@ public class EditItemActivity extends Activity {
 	private Uri newCropGalleryImagePath = null;
 	private CropImageStatus cropStatus = CropImageStatus.NO_CHANGE;
 	private ImageView image;
+	private Uri imagePath;
+	private Uri cropImagePath;
+	private ImageView imageView;
+	private UserProfile up;
 
 	enum SpinnerValue {
 		CATEGORY(R.id.item_category, ItemCategoryEnum.getAllItemCategoryEnumString()),
@@ -120,6 +124,8 @@ public class EditItemActivity extends Activity {
 
 		itemDatabaseHelper = new ItemDatabaseHelper(this);
 		context = getApplicationContext();
+		up = itemDatabaseHelper.getCurrentUserProfile();
+		
 		StorageFactory storageFactory = new SDCardStorageFactory();
 		storage = storageFactory.getInstance();
 		
@@ -152,7 +158,7 @@ public class EditItemActivity extends Activity {
 		View deleteBtn = findViewById(R.id.btn_delete);
 		View saveBtn = findViewById(R.id.btn_save);
 		View newImageBtn = findViewById(R.id.btn_add_item_image);
-		ImageView imageView = (ImageView) findViewById(R.id.item_image);
+		imageView = (ImageView) findViewById(R.id.item_image);
 		CheckBox isDirtyCheckbox = (CheckBox) findViewById(R.id.item_dirty);
 		
 
@@ -229,7 +235,7 @@ public class EditItemActivity extends Activity {
 					if (item == 0) {
 						if (Environment.MEDIA_MOUNTED.equals(Environment
 								.getExternalStorageState())) {
-							launchCameraIntent();
+							launchCameraIntentForEdit();
 						} else {
 							Toast.makeText(context, 
 									R.string.edit_item_message_no_external_storage, 
@@ -237,7 +243,7 @@ public class EditItemActivity extends Activity {
 									.show();	
 						}
 					} else { // pick from gallery
-						launchGalleryIntent();
+						launchGalleryIntentForEdit();
 					}
 				}
 			} );
@@ -299,7 +305,15 @@ public class EditItemActivity extends Activity {
 				
 				@Override
 				public void onClick(View v) {
-					//dialog.show();				
+					if (Environment.MEDIA_MOUNTED.equals(Environment
+							.getExternalStorageState())) {
+						launchCameraIntent();
+					} else {
+						Toast.makeText(context, 
+								R.string.edit_item_message_no_external_storage, 
+								Toast.LENGTH_SHORT)
+								.show();	
+					}				
 				}
 			});
 			
@@ -309,6 +323,11 @@ public class EditItemActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					Toast.makeText(getApplicationContext(), "Save Button was clicked", Toast.LENGTH_LONG).show();
+					if (isInputValid()) {
+						itemDatabaseHelper.saveItemDataRecord(
+								createItemDataBuilder().buildByGender(up.getGender()));
+						finish();
+					}			
 				}
 			});
 			
@@ -559,14 +578,14 @@ public class EditItemActivity extends Activity {
 				.show();
 	}
 	
-	private void launchGalleryIntent() {
+	private void launchGalleryIntentForEdit() {
 		Intent intent = new Intent();
 		intent.setType("image/*");
 		intent.setAction(Intent.ACTION_GET_CONTENT);
 		startActivityForResult(intent, PICK_FROM_GALLERY);
 	}	
 
-	private void launchCameraIntent() {
+	private void launchCameraIntentForEdit() {
 		Intent i1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		newImagePath = storage.getOutputImageFileUri(
 				MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE, false);
@@ -574,7 +593,7 @@ public class EditItemActivity extends Activity {
 		startActivityForResult(i1, EditItemActivity.CAMERA_PIC_REQUEST);
 	}
 	
-	private void launchCropIntent(int type) {
+	private void launchCropIntentForEdit(int type) {
 		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setType("image/*");
 
@@ -630,7 +649,7 @@ public class EditItemActivity extends Activity {
 		}
 	}
 
-	private void launchEditIntent() {
+	private void launchEditIntentForEdit() {
 		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setType("image/*");
 
@@ -708,7 +727,7 @@ public class EditItemActivity extends Activity {
 				// Image captured and saved to fileUri specified in the Intent
 				if (null != newImagePath) {
 					//image.setImageURI(newImagePath);
-					launchCropIntent(CAMERA_PIC_REQUEST);
+					launchCropIntentForEdit(CAMERA_PIC_REQUEST);
 				}
 			} else {
 				storage.deleteFileIfExist(newImagePath);
@@ -738,7 +757,7 @@ public class EditItemActivity extends Activity {
 			if (resultCode == Activity.RESULT_OK) {
 				newGalleryImagePath = data.getData();
 				//image.setImageURI(newGalleryImagePath);
-				launchCropIntent(PICK_FROM_GALLERY);
+				launchCropIntentForEdit(PICK_FROM_GALLERY);
 			}
 		} else if (EditItemActivity.CROP_FROM_GALLERY == requestCode) {
 			if (resultCode == Activity.RESULT_OK) {
@@ -751,7 +770,139 @@ public class EditItemActivity extends Activity {
 				newCropGalleryImagePath = null;
 				newGalleryImagePath = null;
 			}			
+		} else if (CAMERA_PIC_REQUEST_FOR_ADD == requestCode) { // Add activity new image
+			launchCropIntent();
+		} else if (CROP_FROM_CAMERA_FOR_ADD == requestCode) {
+			ItemData.ItemDataBuilder itemDataBuilder = createItemDataBuilder();
+			new ImageSubSampler(context).subSampleCroppedUri(itemDataBuilder
+					.buildByGender(up.getGender()), imageView, context);
 		}
 	}
 
+	private void launchCameraIntent() {
+		
+		// TODO - Create a new intent to launch the MediaStore, Image capture function
+		// Hint: use standard Intent from MediaStore class
+		// See: http://developer.android.com/reference/android/provider/MediaStore.html
+		Intent i1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+		
+		// TODO - Set the imagePath for this image file using the pre-made function
+		// getOutputMediaFile to create a new filename for this specific image;
+		//ALDBG we must use the whole getOutputMediaFileUri and Uri here, otherwise, image will not be displayed File newFile = getOutputMediaFile(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE);
+		Uri newFileUri = storage.getOutputImageFileUri(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE, false);
+
+		
+		// TODO - Add the filename to the Intent as an extra. Use the Intent-extra name
+		// from the MediaStore class, EXTRA_OUTPUT
+		i1.putExtra(MediaStore.EXTRA_OUTPUT, newFileUri); // ALDBG this will not be used in CreateStoryFragment.java due to some bug - imagePath is never assigned a value
+		//ALDBG we must use the whole Uri, otherwise, image will not be displayed  fragment.imagePath = Uri.parse(newFile.getPath());
+		imagePath = newFileUri;
+		
+		
+		// TODO - Start a new activity for result, using the new intent and the request
+		// code CAMERA_PIC_REQUEST
+		startActivityForResult(i1, CAMERA_PIC_REQUEST_FOR_ADD);
+		// ALDBG should  we finish activity here finish();
+	}
+	
+	private ItemData.ItemDataBuilder createItemDataBuilder() {
+		final EditText itemName = (EditText) findViewById(R.id.item_name);
+		final EditText itemDesc = (EditText) findViewById(R.id.item_description);
+		final EditText itemTempMax = (EditText) findViewById(R.id.item_max_temp);
+		final EditText itemTempMin = (EditText) findViewById(R.id.item_min_temp);
+		final EditText itemAge = (EditText) findViewById(R.id.item_age);
+		final EditText itemBrand = (EditText) findViewById(R.id.item_brand);
+		final Spinner itemColor = (Spinner) findViewById(R.id.item_color);
+		final Spinner itemCategory = (Spinner) findViewById(R.id.item_category);
+		final Spinner itemStyle = (Spinner) findViewById(R.id.item_style);
+		final Spinner itemMaterial = (Spinner) findViewById(R.id.item_material);
+		
+		ItemData.ItemDataBuilder itemDataBuilder = new ItemData.ItemDataBuilder(
+				imagePath.toString(), 
+				ItemColorEnum.valueOf(itemColor.getSelectedItem().toString()), 
+				Integer.valueOf(itemTempMin.getText().toString()), 
+				Integer.valueOf(itemTempMax.getText().toString()), 
+				ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString()),
+				cropImagePath.toString())
+				.brand(itemBrand.getText().toString())
+				.age(1)
+				// ALDBG to do.age(Double.valueOf(age.getSelectedItem().toString()))
+				.material(ItemMaterialEnum.valueOf(itemMaterial.getSelectedItem().toString()))
+				.style(ItemStyleEnum.valueOf(itemStyle.getSelectedItem().toString()));
+
+		if (!itemName.getText().toString().isEmpty()) {
+			itemDataBuilder.name(itemName.getText().toString());
+		}
+		
+		if (!itemDesc.getText().toString().isEmpty()) {
+			itemDataBuilder.description(itemDesc.getText().toString());
+		}
+
+		return itemDataBuilder;
+	}
+	
+	private void launchCropIntent() {
+    	Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setType("image/*");
+        
+        List<ResolveInfo> list = getPackageManager().queryIntentActivities( intent, 0 );
+        
+        int size = list.size();
+        
+        if (size == 0) {	        
+        	Toast.makeText(this, "Can not find image crop app", Toast.LENGTH_SHORT).show();
+        	
+            return;
+        } else {
+    		// generate a new Uri for the new cropped image
+        	cropImagePath = storage.getOutputImageFileUri(
+    				MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE, true);
+        	
+        	final Spinner itemCategory = (Spinner) findViewById(R.id.item_category);
+        	
+        	intent.setData(imagePath) // set the input to the picture taken by camera
+        	.putExtra("outputX", ItemData.getCropWidthFromCategory(ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString())))
+        	.putExtra("outputY", ItemData.getCropWidthFromCategory(ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString())))
+        	.putExtra("aspectX", 1)
+        	.putExtra("aspectY", 1)
+        	.putExtra("scale", true)
+        	.putExtra("return-data", false) // don't return bitmap data
+        	.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, cropImagePath); // set the name of the output cropped image
+        	
+        	// Create the following intent to avoid the following  error 
+        	// No Activity found to handle Intent { act=... (has extras) }
+    		Intent i = new Intent(intent);
+        	ResolveInfo res	= list.get(0); // ALDBG assume the first one is camera crop       	
+        	i.setComponent( new ComponentName(res.activityInfo.packageName, 
+        			res.activityInfo.name));        	
+        	startActivityForResult(i, CROP_FROM_CAMERA_FOR_ADD);
+        }
+	}
+
+	private boolean isInputValid() {
+		final EditText itemTempMax = (EditText) findViewById(R.id.item_max_temp);
+		final EditText itemTempMin = (EditText) findViewById(R.id.item_min_temp);
+		
+		// image field cannot be null
+		if (null == imagePath) {
+			Toast.makeText(context, 
+					R.string.add_item_message_no_image, 
+					Toast.LENGTH_SHORT)
+					.show();
+			return false;
+		}
+		
+		// tempMax >= tempMin
+		if (Integer.valueOf(itemTempMax.getText().toString()) 
+				< Integer.valueOf(itemTempMin.getText().toString())) {
+			Toast.makeText(context, 
+					R.string.add_item_message_tempMax_smaller_tempMin, 
+					Toast.LENGTH_SHORT)
+					.show();
+			return false;					
+		}
+		
+		return true;
+	}
 }
