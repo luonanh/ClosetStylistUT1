@@ -70,7 +70,6 @@ public class EditItemActivity extends Activity {
 	private Uri newGalleryImagePath = null;
 	private Uri newCropGalleryImagePath = null;
 	private CropImageStatus cropStatus = CropImageStatus.NO_CHANGE;
-	private ImageView image;
 	private Uri imagePath;
 	private Uri cropImagePath;
 	private ImageView imageView;
@@ -132,6 +131,9 @@ public class EditItemActivity extends Activity {
 		UserProfile up = itemDatabaseHelper.getCurrentUserProfile();
 		gender = up.getGender();
 		
+		// This ImageView is used by all activities 
+		imageView = (ImageView) findViewById(R.id.item_image);
+		
 		initSpinner();
 		initListerner();
 		
@@ -158,7 +160,6 @@ public class EditItemActivity extends Activity {
 		View deleteBtn = findViewById(R.id.btn_delete);
 		View saveBtn = findViewById(R.id.btn_save);
 		View newImageBtn = findViewById(R.id.btn_add_item_image);
-		imageView = (ImageView) findViewById(R.id.item_image);
 		CheckBox isDirtyCheckbox = (CheckBox) findViewById(R.id.item_dirty);
 		
 
@@ -297,7 +298,7 @@ public class EditItemActivity extends Activity {
 				
 				@Override
 				public void onClick(View v) {
-					setItemData(null);
+					resetButtonHandlerForAdd();
 				}
 			});
 			
@@ -390,7 +391,6 @@ public class EditItemActivity extends Activity {
 	}
 	
 	private void initListerner() {
-		image = (ImageView) findViewById(R.id.item_image);
 		final EditText itemName = (EditText) findViewById(R.id.item_name);
 		final EditText itemDesc = (EditText) findViewById(R.id.item_description);
 		final EditText itemTempMax = (EditText) findViewById(R.id.item_max_temp);
@@ -755,7 +755,7 @@ public class EditItemActivity extends Activity {
 		} else if (EditItemActivity.CROP_FROM_CAMERA == requestCode) {
 			if (resultCode == Activity.RESULT_OK) {
 				if (null != newCropImagePath) {
-					image.setImageURI(newCropImagePath);
+					imageView.setImageURI(newCropImagePath);
 					cropStatus = CropImageStatus.NEW_IMAGE_NEWER;
 				}
 			} else {
@@ -765,7 +765,7 @@ public class EditItemActivity extends Activity {
 		} else if (EditItemActivity.EDIT_FROM_FILE == requestCode) {
 			if (resultCode == Activity.RESULT_OK) {
 				if (null != newEditImagePath) {
-					image.setImageURI(newEditImagePath);
+					imageView.setImageURI(newEditImagePath);
 					cropStatus = CropImageStatus.EDIT_IMAGE_NEWER;
 				}
 			} else {
@@ -781,7 +781,7 @@ public class EditItemActivity extends Activity {
 		} else if (EditItemActivity.CROP_FROM_GALLERY == requestCode) {
 			if (resultCode == Activity.RESULT_OK) {
 				if (null != newCropGalleryImagePath) {
-					image.setImageURI(newCropGalleryImagePath);
+					imageView.setImageURI(newCropGalleryImagePath);
 					cropStatus = CropImageStatus.NEW_IMAGE_NEWER;
 				}
 			} else {
@@ -798,33 +798,34 @@ public class EditItemActivity extends Activity {
 		}
 	}
 
-	private void launchCameraIntent() {
-		
-		// TODO - Create a new intent to launch the MediaStore, Image capture function
+	/**
+	 * This is called by Add activity to launch camera
+	 */
+	private void launchCameraIntent() {		
+		// Create a new intent to launch the MediaStore, Image capture function
 		// Hint: use standard Intent from MediaStore class
 		// See: http://developer.android.com/reference/android/provider/MediaStore.html
 		Intent i1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-		
-		// TODO - Set the imagePath for this image file using the pre-made function
+		// Set the imagePath for this image file using the pre-made function
 		// getOutputMediaFile to create a new filename for this specific image;
-		//ALDBG we must use the whole getOutputMediaFileUri and Uri here, otherwise, image will not be displayed File newFile = getOutputMediaFile(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE);
+		// ALDBG we must use the whole getOutputMediaFileUri and Uri here, otherwise, image will not be displayed File newFile = getOutputMediaFile(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE);
 		Uri newFileUri = storage.getOutputImageFileUri(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE, false);
 
-		
-		// TODO - Add the filename to the Intent as an extra. Use the Intent-extra name
+		// Add the filename to the Intent as an extra. Use the Intent-extra name
 		// from the MediaStore class, EXTRA_OUTPUT
 		i1.putExtra(MediaStore.EXTRA_OUTPUT, newFileUri); // ALDBG this will not be used in CreateStoryFragment.java due to some bug - imagePath is never assigned a value
 		//ALDBG we must use the whole Uri, otherwise, image will not be displayed  fragment.imagePath = Uri.parse(newFile.getPath());
 		imagePath = newFileUri;
 		
-		
-		// TODO - Start a new activity for result, using the new intent and the request
+		// Start a new activity for result, using the new intent and the request
 		// code CAMERA_PIC_REQUEST
 		startActivityForResult(i1, CAMERA_PIC_REQUEST_FOR_ADD);
-		// ALDBG should  we finish activity here finish();
 	}
 	
+	/**
+	 * This is called by Add activity to create an ItemData from the views.
+	 */
 	private ItemData.ItemDataBuilder createItemDataBuilder() {
 		final EditText itemName = (EditText) findViewById(R.id.item_name);
 		final EditText itemDesc = (EditText) findViewById(R.id.item_description);
@@ -846,7 +847,6 @@ public class EditItemActivity extends Activity {
 				cropImagePath.toString())
 				.brand(itemBrand.getText().toString())
 				.age(Double.valueOf(itemAge.getText().toString()))
-				// ALDBG to do.age(Double.valueOf(age.getSelectedItem().toString()))
 				.material(ItemMaterialEnum.valueOf(itemMaterial.getSelectedItem().toString()))
 				.style(ItemStyleEnum.valueOf(itemStyle.getSelectedItem().toString()));
 
@@ -860,7 +860,11 @@ public class EditItemActivity extends Activity {
 
 		return itemDataBuilder;
 	}
-	
+
+	/**
+	 * This is called by Add activity to launch crop action from image taken 
+	 * from camera.
+	 */
 	private void launchCropIntent() {
     	Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setType("image/*");
@@ -899,6 +903,9 @@ public class EditItemActivity extends Activity {
         }
 	}
 
+	/**
+	 * This is called by Add activity to check if the views have valid values.
+	 */
 	private boolean isInputValid() {
 		final EditText itemTempMax = (EditText) findViewById(R.id.item_max_temp);
 		final EditText itemTempMin = (EditText) findViewById(R.id.item_min_temp);
@@ -923,5 +930,21 @@ public class EditItemActivity extends Activity {
 		}
 		
 		return true;
+	}
+	
+	private void resetButtonHandlerForAdd() {
+		// Delete original image
+		if (imagePath != null) {
+			storage.deleteFileIfExist(imagePath);
+		}
+		
+		// Delete cropped image and clear view
+		if (cropImagePath != null) {
+			storage.deleteFileIfExist(cropImagePath);
+			imageView.setImageResource(0);
+		}
+		
+		// clear all of the views
+		setItemData(null);
 	}
 }
