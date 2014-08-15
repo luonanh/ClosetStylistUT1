@@ -181,13 +181,13 @@
 
             <EditText
                 android:id="@+id/item_brand"
-                android:layout_width="50dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/fakeid_4"
                 android:layout_below="@id/fakeid_3"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/fakeid_4"
-                android:inputType="number"
+                android:singleLine="true"
                 android:textSize="@dimen/register_textsize" />
 
             <Spinner

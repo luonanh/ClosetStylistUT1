@@ -54,6 +54,7 @@
     <string name="view_item_dialog_deletion_no">No</string>
     <string name="add_item_message_no_image">Please take a picture of this item</string>
     <string name="add_item_message_tempMax_smaller_tempMin">Maximum temperature must be higher than minimum temperature</string>
+    <string name="please_select_category_and_style">Please select category and style</string>
     
     
 </resources>

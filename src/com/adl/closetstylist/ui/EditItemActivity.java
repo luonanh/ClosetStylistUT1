@@ -190,7 +190,8 @@ public class EditItemActivity extends Activity {
 					R.id.item_max_temp,
 					R.id.item_min_temp,
 					R.id.item_brand,
-					R.id.item_style
+					R.id.item_style,
+					R.id.item_dirty
 			};
 			for (int viewId : ids) {
 				View view = findViewById(viewId);
@@ -305,6 +306,20 @@ public class EditItemActivity extends Activity {
 				
 				@Override
 				public void onClick(View v) {
+					final Spinner itemCategory = (Spinner) findViewById(R.id.item_category);
+					final Spinner itemStyle = (Spinner) findViewById(R.id.item_style);
+					
+					String category = (String) itemCategory.getSelectedItem();
+					String style = (String) itemStyle.getSelectedItem();
+					if (!"".equals(category) || category.contains("-")
+							|| !"".equals(style) || style.contains("-")) {
+						Toast.makeText(context, 
+								R.string.please_select_category_and_style, 
+								Toast.LENGTH_LONG)
+								.show();
+						return;
+					}
+					
 					if (Environment.MEDIA_MOUNTED.equals(Environment
 							.getExternalStorageState())) {
 						launchCameraIntent();
@@ -433,11 +448,15 @@ public class EditItemActivity extends Activity {
 				Integer oldSelection = oldStyleSelection.get(currentCategory);
 				if (oldSelection != null)
 					itemStyle.setSelection(oldSelection);
-				else
-					itemStyle.setSelection(ItemStyleEnum
-							.convertToIndexPerCateogryAndGender(
-									itemData.getStyle(),
-									itemData.getCategory(), gender));
+				else {
+					if (itemData != null)
+						itemStyle.setSelection(ItemStyleEnum
+								.convertToIndexPerCateogryAndGender(
+										itemData.getStyle(),
+										itemData.getCategory(), gender));
+					else
+						itemStyle.setSelection(itemStyle.getAdapter().getCount());
+				}
 				
 				oldPosition = position;
 			}
