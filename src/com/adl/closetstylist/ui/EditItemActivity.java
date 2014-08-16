@@ -307,29 +307,7 @@ public class EditItemActivity extends Activity {
 				
 				@Override
 				public void onClick(View v) {
-					final Spinner itemCategory = (Spinner) findViewById(R.id.item_category);
-					final Spinner itemStyle = (Spinner) findViewById(R.id.item_style);
-					
-					String category = (String) itemCategory.getSelectedItem();
-					String style = (String) itemStyle.getSelectedItem();
-					if (!"".equals(category) || category.contains("-")
-							|| !"".equals(style) || style.contains("-")) {
-						Toast.makeText(context, 
-								R.string.please_select_category_and_style, 
-								Toast.LENGTH_LONG)
-								.show();
-						return;
-					}
-					
-					if (Environment.MEDIA_MOUNTED.equals(Environment
-							.getExternalStorageState())) {
-						launchCameraIntent();
-					} else {
-						Toast.makeText(context, 
-								R.string.edit_item_message_no_external_storage, 
-								Toast.LENGTH_SHORT)
-								.show();	
-					}				
+					newImageHandlerForAdd();
 				}
 			});
 			
@@ -841,12 +819,12 @@ public class EditItemActivity extends Activity {
 		ItemData.ItemDataBuilder itemDataBuilder = new ItemData.ItemDataBuilder(
 				imagePath.toString(), 
 				ItemColorEnum.valueOf(itemColor.getSelectedItem().toString()), 
-				Integer.valueOf(itemTempMin.getText().toString()), 
-				Integer.valueOf(itemTempMax.getText().toString()), 
+				0,//Integer.valueOf(itemTempMin.getText().toString()), 
+				0,//Integer.valueOf(itemTempMax.getText().toString()), 
 				ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString()),
 				cropImagePath.toString())
-				.brand(itemBrand.getText().toString())
-				.age(Double.valueOf(itemAge.getText().toString()))
+				//.brand(itemBrand.getText().toString())
+				//.age(Double.valueOf(itemAge.getText().toString()))
 				.material(ItemMaterialEnum.valueOf(itemMaterial.getSelectedItem().toString()))
 				.style(ItemStyleEnum.valueOf(itemStyle.getSelectedItem().toString()));
 
@@ -856,6 +834,16 @@ public class EditItemActivity extends Activity {
 		
 		if (!itemDesc.getText().toString().isEmpty()) {
 			itemDataBuilder.description(itemDesc.getText().toString());
+		}
+		
+		if (!itemBrand.getText().toString().isEmpty()) {
+			itemDataBuilder.brand(itemBrand.getText().toString());
+		}
+		
+		if (!itemAge.getText().toString().isEmpty()) {
+			itemDataBuilder.age(Double.valueOf(itemAge.getText().toString()));
+		} else {
+			itemDataBuilder.age(0);
 		}
 
 		return itemDataBuilder;
@@ -907,8 +895,8 @@ public class EditItemActivity extends Activity {
 	 * This is called by Add activity to check if the views have valid values.
 	 */
 	private boolean isInputValid() {
-		final EditText itemTempMax = (EditText) findViewById(R.id.item_max_temp);
-		final EditText itemTempMin = (EditText) findViewById(R.id.item_min_temp);
+		//final EditText itemTempMax = (EditText) findViewById(R.id.item_max_temp);
+		//final EditText itemTempMin = (EditText) findViewById(R.id.item_min_temp);
 		
 		// image field cannot be null
 		if (null == imagePath) {
@@ -919,7 +907,7 @@ public class EditItemActivity extends Activity {
 			return false;
 		}
 		
-		// tempMax >= tempMin
+		/* tempMax >= tempMin
 		if (Integer.valueOf(itemTempMax.getText().toString()) 
 				< Integer.valueOf(itemTempMin.getText().toString())) {
 			Toast.makeText(context, 
@@ -928,6 +916,7 @@ public class EditItemActivity extends Activity {
 					.show();
 			return false;					
 		}
+		*/
 		
 		return true;
 	}
@@ -946,5 +935,62 @@ public class EditItemActivity extends Activity {
 		
 		// clear all of the views
 		setItemData(null);
+	}
+	
+	private void newImageHandlerForAdd() {
+		// Category MUST be chosen
+		final Spinner itemCategory = (Spinner) findViewById(R.id.item_category);
+		String category = (String) itemCategory.getSelectedItem().toString();
+		if ("".equals(category) || category.contains("-")) {
+			Toast.makeText(context, 
+					R.string.please_select_category, 
+					Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+
+		// Style MUST be chosen
+		final Spinner itemStyle = (Spinner) findViewById(R.id.item_style);
+		String style = (String) itemStyle.getSelectedItem().toString();
+		if ("".equals(style) || style.contains("-")) {
+			Toast.makeText(context, 
+					R.string.please_select_style, 
+					Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+
+		// Color MUST be chosen
+		final Spinner itemColor = (Spinner) findViewById(R.id.item_color);
+		String color = (String) itemColor.getSelectedItem().toString();
+		if ("".equals(style) || color.contains("-")) {
+			Toast.makeText(context, 
+					R.string.please_select_color, 
+					Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+
+		// Material MUST be chosen
+		final Spinner itemMaterial = (Spinner) findViewById(R.id.item_material);
+		String material = (String) itemMaterial.getSelectedItem().toString();
+		if ("".equals(style) || material.contains("-")) {
+			Toast.makeText(context, 
+					R.string.please_select_material, 
+					Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+
+		if (Environment.MEDIA_MOUNTED.equals(Environment
+				.getExternalStorageState())) {
+			launchCameraIntent();
+		} else {
+			Toast.makeText(context, 
+					R.string.edit_item_message_no_external_storage, 
+					Toast.LENGTH_SHORT)
+					.show();	
+		}				
+
 	}
 }
