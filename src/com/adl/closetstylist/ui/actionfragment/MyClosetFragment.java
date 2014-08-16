@@ -97,7 +97,7 @@ public class MyClosetFragment extends ActionFragment implements ActionBar.TabLis
 			public void onClick(View v) {
 				Intent i = new Intent(getActivity(), EditItemActivity.class);
 				i.putExtra(EditItemActivity.ACTION_TYPE, ActionType.ADD.name());
-                startActivity(i);
+                startActivityForResult(i, EditItemActivity.ADD_ITEM_REQUESTCODE);
 			}
 		});
 
@@ -131,7 +131,11 @@ public class MyClosetFragment extends ActionFragment implements ActionBar.TabLis
 		super.onActivityResult(requestCode, resultCode, data);
 		//catch if deleting of an item occurs
 		if (requestCode == EditItemActivity.EDIT_ITEM_REQUESTCODE
-				&& resultCode == EditItemActivity.DELETE_OK) {
+				&& resultCode == EditItemActivity.DELETE_OK
+			||
+			//catch if adding of an item occurs
+			requestCode == EditItemActivity.ADD_ITEM_REQUESTCODE
+			&& resultCode == EditItemActivity.ADD_OK) {
 			mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
 			// Set up the ViewPager with the sections adapter.

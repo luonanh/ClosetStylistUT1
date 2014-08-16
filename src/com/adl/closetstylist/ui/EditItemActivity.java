@@ -48,7 +48,9 @@ import com.adl.closetstylist.ui.view.ArrayAdapter;
 
 public class EditItemActivity extends Activity {
 	public static final int DELETE_OK = 100;
+	public static final int ADD_OK = 101;
 	public static final int EDIT_ITEM_REQUESTCODE = 1;
+	public static final int ADD_ITEM_REQUESTCODE = 2;	
 	public static final String ACTION_TYPE = ActionType.class.getName();	
 	static final int CAMERA_PIC_REQUEST = 1;
 	static final int CROP_FROM_CAMERA = 2;
@@ -57,7 +59,7 @@ public class EditItemActivity extends Activity {
 	static final int CROP_FROM_GALLERY = 5;
 	static final int CAMERA_PIC_REQUEST_FOR_ADD = 6;
 	static final int CROP_FROM_CAMERA_FOR_ADD = 7;
-	private static final String TAG = EditItemActivity.class.getCanonicalName();	
+	private static final String TAG = EditItemActivity.class.getCanonicalName();
 	
 	private ItemDatabaseHelper itemDatabaseHelper;
 	private ItemData itemData;
@@ -342,6 +344,7 @@ public class EditItemActivity extends Activity {
 					if (isInputValid()) {
 						itemDatabaseHelper.saveItemDataRecord(
 								createItemDataBuilder().buildByGender(up.getGender()));
+						setResult(ADD_OK);
 						finish();
 					}			
 				}
