@@ -74,8 +74,8 @@ public class ItemData implements Parcelable {
 		this.imageLink = builder.imageLink;
 		this.cropImageLink = builder.cropImageLink;		
 		this.color = builder.color;
-		this.tempMin = builder.tempMin;
-		this.tempMax = builder.tempMax;
+		//this.tempMin = builder.tempMin;
+		//this.tempMax = builder.tempMax;
 		this.category = builder.category;
 		this.brand = builder.brand;
 		setAge(builder.age);
@@ -535,16 +535,25 @@ public class ItemData implements Parcelable {
 			return this;
 		}
 
+		/**
+		 * Unconditionally build ItemData, used by getItemDataFromCursor
+		 * to rebuild an ItemData from database.
+		 * In this case, there's no need to use Gender information
+		 */
 		public ItemData build() {
 			ItemData itemData = new ItemData(this);
-			/*
 			if (age > 50) {
 				throw new IllegalStateException("Age out of range");
 			}
-			*/
 			return itemData;
 		}
 		
+		/**
+		 * Build ItemData based on Gender, this is called when we originally
+		 * add an item from Add activity.
+		 * @param gender
+		 * @return
+		 */
 		public ItemData buildByGender(GenderEnum gender) {
 			ItemData itemData = new ItemData(this);
 			switch (gender) {
