@@ -213,7 +213,7 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		itemDatabaseHelper = new ItemDatabaseHelper(getActivity());
+		itemDatabaseHelper = ItemDatabaseHelper.getInstance(getActivity());
 		context = getActivity().getApplicationContext();
 
 		// Set up the action bar.

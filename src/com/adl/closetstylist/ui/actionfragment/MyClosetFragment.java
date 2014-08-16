@@ -50,7 +50,7 @@ public class MyClosetFragment extends ActionFragment implements ActionBar.TabLis
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		itemDatabaseHelper = new ItemDatabaseHelper(getActivity());
+		itemDatabaseHelper = ItemDatabaseHelper.getInstance(getActivity());
 		
 		// Set up the action bar.
 		final ActionBar actionBar = getActivity().getActionBar();
@@ -126,9 +126,13 @@ public class MyClosetFragment extends ActionFragment implements ActionBar.TabLis
 		super.onSaveInstanceState(outState);
 	}
 
+	/**
+	 * Update view when we add or delete items in MyCloset.
+	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		
 		//catch if deleting of an item occurs
 		if (requestCode == EditItemActivity.EDIT_ITEM_REQUESTCODE
 				&& resultCode == EditItemActivity.DELETE_OK

@@ -43,7 +43,7 @@ public class MyLaundryBagFragment extends ActionFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		itemDatabaseHelper = new ItemDatabaseHelper(getActivity());
+		itemDatabaseHelper = ItemDatabaseHelper.getInstance(getActivity());
 		
 		// Set up the action bar.
 		final ActionBar actionBar = getActivity().getActionBar();

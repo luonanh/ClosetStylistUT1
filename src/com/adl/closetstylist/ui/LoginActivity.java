@@ -29,7 +29,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         
         context = getApplicationContext();
-        itemDatabaseHelper = new ItemDatabaseHelper(this);
+        itemDatabaseHelper = ItemDatabaseHelper.getInstance(this);
         
         View btnLogin = findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(new OnClickListener() {

@@ -38,7 +38,7 @@ public class ItemDataListFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		itemDatabaseHelper = new ItemDatabaseHelper(getActivity());
+		itemDatabaseHelper = ItemDatabaseHelper.getInstance(getActivity());
 
 		switch (garmentCategory) {
 		case JACKET:

@@ -52,14 +52,14 @@ public class EditItemActivity extends Activity {
 	public static final int EDIT_ITEM_REQUESTCODE = 1;
 	public static final int ADD_ITEM_REQUESTCODE = 2;	
 	public static final String ACTION_TYPE = ActionType.class.getName();	
-	static final int CAMERA_PIC_REQUEST = 1;
-	static final int CROP_FROM_CAMERA = 2;
-	static final int EDIT_FROM_FILE = 3;
-	static final int PICK_FROM_GALLERY = 4;
-	static final int CROP_FROM_GALLERY = 5;
+	static final int CAMERA_PIC_REQUEST_FOR_EDIT = 1;
+	static final int CROP_FROM_CAMERA_FOR_EDIT = 2;
+	static final int EDIT_FROM_FILE_FOR_EDIT = 3;
+	static final int PICK_FROM_GALLERY_FOR_EDIT = 4;
+	static final int CROP_FROM_GALLERY_FOR_EDIT = 5;
 	static final int CAMERA_PIC_REQUEST_FOR_ADD = 6;
 	static final int CROP_FROM_CAMERA_FOR_ADD = 7;
-	private static final String TAG = EditItemActivity.class.getCanonicalName();
+	private static final String TAG = EditItemActivity.class.getCanonicalName();	
 	
 	private ItemDatabaseHelper itemDatabaseHelper;
 	private ItemData itemData;
@@ -72,10 +72,11 @@ public class EditItemActivity extends Activity {
 	private Uri newGalleryImagePath = null;
 	private Uri newCropGalleryImagePath = null;
 	private CropImageStatus cropStatus = CropImageStatus.NO_CHANGE;
-	private Uri imagePath;
-	private Uri cropImagePath;
+	private Uri imagePathForAdd = null;
+	private Uri cropImagePathForAdd = null;
 	private ImageView imageView;
 	private UserProfile up;
+	private ActionType actionType = null;
 
 	enum SpinnerValue {
 		CATEGORY(R.id.item_category, ItemCategoryEnum.getAllItemCategoryEnumString()),
@@ -123,7 +124,7 @@ public class EditItemActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edititem);
 
-		itemDatabaseHelper = new ItemDatabaseHelper(this);
+		itemDatabaseHelper = ItemDatabaseHelper.getInstance(this);
 		context = getApplicationContext();
 		up = itemDatabaseHelper.getCurrentUserProfile();
 		
@@ -142,8 +143,11 @@ public class EditItemActivity extends Activity {
 		setupActionHandler();
 	}
 
+	/**
+	 * Set up all image handlers, button handlers.
+	 */
 	private void setupActionHandler() {
-		ActionType actionType = null;
+
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			String actionTypeStr = extras.getString(ACTION_TYPE);
@@ -163,8 +167,6 @@ public class EditItemActivity extends Activity {
 		View saveBtn = findViewById(R.id.btn_save);
 		View newImageBtn = findViewById(R.id.btn_add_item_image);
 		CheckBox isDirtyCheckbox = (CheckBox) findViewById(R.id.item_dirty);
-		
-
 		
 		switch (actionType) {
 		case VIEW:
@@ -228,38 +230,15 @@ public class EditItemActivity extends Activity {
 					deleteItem();
 				}
 			});
-			
-			// Create dialog for NewImage button
-			final String [] items			= new String [] {"Take from camera", "Select from gallery"};				
-			ArrayAdapter<String> adapter	= new ArrayAdapter<String> (this, android.R.layout.select_dialog_item,items);
-			AlertDialog.Builder builder		= new AlertDialog.Builder(this);
-			builder.setTitle("Select Image");
-			builder.setAdapter( adapter, new DialogInterface.OnClickListener() {
-				public void onClick( DialogInterface dialog, int item ) { //pick from camera
-					if (item == 0) {
-						if (Environment.MEDIA_MOUNTED.equals(Environment
-								.getExternalStorageState())) {
-							launchCameraIntentForEdit();
-						} else {
-							Toast.makeText(context, 
-									R.string.edit_item_message_no_external_storage, 
-									Toast.LENGTH_SHORT)
-									.show();	
-						}
-					} else { // pick from gallery
-						launchGalleryIntentForEdit();
-					}
-				}
-			} );
-			final AlertDialog dialog = builder.create();
-			
+
+			// Long-clicked ImageView handler
 			imageView.setOnLongClickListener(new OnLongClickListener() {
 				
 				@Override
 				public boolean onLongClick(View v) {
 					if (Environment.MEDIA_MOUNTED.equals(Environment
 							.getExternalStorageState())) {
-						//launchEditIntent();
+						launchEditIntentForEdit();
 						return true;
 					} else {
 						Toast.makeText(context, 
@@ -276,7 +255,7 @@ public class EditItemActivity extends Activity {
 				
 				@Override
 				public void onClick(View v) {
-					dialog.show();				
+					newImageHandlerForEdit();		
 				}
 			});
 			
@@ -285,7 +264,7 @@ public class EditItemActivity extends Activity {
 
 				@Override
 				public void onClick(View v) {
-					Toast.makeText(getApplicationContext(), "Save Button was clicked", Toast.LENGTH_LONG).show();
+					saveButtonHandlerForEdit();
 				}
 			});
 
@@ -318,10 +297,11 @@ public class EditItemActivity extends Activity {
 
 				@Override
 				public void onClick(View v) {
-					Toast.makeText(getApplicationContext(), "Save Button was clicked", Toast.LENGTH_LONG).show();
-					if (isInputValid()) {
+					
+					if (isInputValidForAdd()) {
 						itemDatabaseHelper.saveItemDataRecord(
-								createItemDataBuilder().buildByGender(up.getGender()));
+								createItemDataBuilderForAdd().buildByGender(up.getGender()));
+						Toast.makeText(getApplicationContext(), "Item is saved", Toast.LENGTH_LONG).show();
 						setResult(ADD_OK);
 						finish();
 					}			
@@ -582,7 +562,7 @@ public class EditItemActivity extends Activity {
 		Intent intent = new Intent();
 		intent.setType("image/*");
 		intent.setAction(Intent.ACTION_GET_CONTENT);
-		startActivityForResult(intent, PICK_FROM_GALLERY);
+		startActivityForResult(intent, PICK_FROM_GALLERY_FOR_EDIT);
 	}	
 
 	private void launchCameraIntentForEdit() {
@@ -590,7 +570,7 @@ public class EditItemActivity extends Activity {
 		newImagePath = storage.getOutputImageFileUri(
 				MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE, false);
 		i1.putExtra(MediaStore.EXTRA_OUTPUT, newImagePath);
-		startActivityForResult(i1, EditItemActivity.CAMERA_PIC_REQUEST);
+		startActivityForResult(i1, EditItemActivity.CAMERA_PIC_REQUEST_FOR_EDIT);
 	}
 	
 	private void launchCropIntentForEdit(int type) {
@@ -606,12 +586,13 @@ public class EditItemActivity extends Activity {
 
 			return;
 		} else {
-			if (PICK_FROM_GALLERY == type) {
+			final Spinner itemCategory = (Spinner) findViewById(R.id.item_category);
+			if (PICK_FROM_GALLERY_FOR_EDIT == type) {
 				newCropGalleryImagePath = storage.getOutputImageFileUri(
 						MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE, true);
 				intent.setData(newGalleryImagePath) // set the input to the picture in gallery
-				.putExtra("outputX", 150) // equal to R.dimen.crop_bottom_width
-				.putExtra("outputY", 150) // equal to R.dimen.crop_bottom_height
+				.putExtra("outputX", ItemData.getCropWidthFromCategory(ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString())))
+				.putExtra("outputY", ItemData.getCropWidthFromCategory(ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString())))
 				.putExtra("aspectX", 1)
 				.putExtra("aspectY", 1)
 				.putExtra("scale", true)
@@ -624,13 +605,13 @@ public class EditItemActivity extends Activity {
 				ResolveInfo res	= list.get(0); // ALDBG assume the first one is camera crop       	
 				i.setComponent( new ComponentName(res.activityInfo.packageName, 
 						res.activityInfo.name));        	
-				startActivityForResult(i, CROP_FROM_GALLERY);
-			} else if (CAMERA_PIC_REQUEST == type) {
+				startActivityForResult(i, CROP_FROM_GALLERY_FOR_EDIT);
+			} else if (CAMERA_PIC_REQUEST_FOR_EDIT == type) {
 				newCropImagePath = storage.getOutputImageFileUri(
 						MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE, true);
 				intent.setData(newImagePath) // set the input to the picture taken by camera
-				.putExtra("outputX", 150) // equal to R.dimen.crop_bottom_width
-				.putExtra("outputY", 150) // equal to R.dimen.crop_bottom_height
+				.putExtra("outputX", ItemData.getCropWidthFromCategory(ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString())))
+				.putExtra("outputY", ItemData.getCropWidthFromCategory(ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString())))
 				.putExtra("aspectX", 1)
 				.putExtra("aspectY", 1)
 				.putExtra("scale", true)
@@ -643,7 +624,7 @@ public class EditItemActivity extends Activity {
 				ResolveInfo res	= list.get(0); // ALDBG assume the first one is camera crop       	
 				i.setComponent( new ComponentName(res.activityInfo.packageName, 
 						res.activityInfo.name));        	
-				startActivityForResult(i, CROP_FROM_CAMERA);
+				startActivityForResult(i, CROP_FROM_CAMERA_FOR_EDIT);
 			}
 
 		}
@@ -670,9 +651,10 @@ public class EditItemActivity extends Activity {
 			} else {
 				oldUri = newImagePath; // user took a new picture, let's edit the new one
 			}
+			final Spinner itemCategory = (Spinner) findViewById(R.id.item_category);
 			intent.setData(oldUri) // set the input to the picture taken by camera
-			.putExtra("outputX", 150) // equal to R.dimen.crop_bottom_width
-			.putExtra("outputY", 150) // equal to R.dimen.crop_bottom_height
+			.putExtra("outputX", ItemData.getCropWidthFromCategory(ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString()))) // equal to R.dimen.crop_bottom_width
+			.putExtra("outputY", ItemData.getCropWidthFromCategory(ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString()))) // equal to R.dimen.crop_bottom_height
 			.putExtra("aspectX", 1)
 			.putExtra("aspectY", 1)
 			.putExtra("scale", true)
@@ -685,36 +667,42 @@ public class EditItemActivity extends Activity {
 			ResolveInfo res	= list.get(0); // ALDBG assume the first one is camera crop       	
 			i.setComponent( new ComponentName(res.activityInfo.packageName, 
 					res.activityInfo.name));        	
-			startActivityForResult(i, EDIT_FROM_FILE);
+			startActivityForResult(i, EDIT_FROM_FILE_FOR_EDIT);
 		}
 	}
 
 	@Override
 	public void onBackPressed() {
-		//if ((null != newImagePath) && (isNewImagePathValid)) {
-		if (null != newImagePath) {
-			// this mean a new image was taken, but user decides not to save
-			storage.deleteFileIfExist(newImagePath);
-		}
-		newImagePath = null;
 
+		if (actionType == ActionType.EDIT) {
+			if (null != newImagePath) {
+				// this mean a new image was taken, but user decides not to save
+				storage.deleteFileIfExist(newImagePath);
+			}
+			newImagePath = null;
 
-		//if ((null != newCropImagePath) && (isNewCropImagePathValid)) {
-		if (null != newCropImagePath) {
-			storage.deleteFileIfExist(newCropImagePath);
-		}
-		newCropImagePath = null;
+			if (null != newCropImagePath) {
+				// this mean a new image was taken and cropped, 
+				// but user decides not to save
+				storage.deleteFileIfExist(newCropImagePath);
+			}
+			newCropImagePath = null;
 
-		if (null != newEditImagePath) {
-			storage.deleteFileIfExist(newEditImagePath);
-		}
-		newEditImagePath = null;
+			if (null != newEditImagePath) {
+				storage.deleteFileIfExist(newEditImagePath);
+			}
+			newEditImagePath = null;
 
-		if (null != newCropGalleryImagePath) {
-			// this mean a new image was taken, but user decides not to save
-			storage.deleteFileIfExist(newCropGalleryImagePath);
+			if (null != newCropGalleryImagePath) {
+				// this mean a new image was chosen from gallery, 
+				// but user decides not to save. We need to delete the newly cropped
+				// image but leave the image in gallery alone.
+				storage.deleteFileIfExist(newCropGalleryImagePath);
+			}
+			newCropGalleryImagePath = null;
+			
+			setResult(DELETE_OK); // update image when get back to MyCloset
 		}
-		newCropGalleryImagePath = null;
 
 		// Finish the Activity
 		finish();
@@ -722,18 +710,18 @@ public class EditItemActivity extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == EditItemActivity.CAMERA_PIC_REQUEST) {
+		if (requestCode == EditItemActivity.CAMERA_PIC_REQUEST_FOR_EDIT) {
 			if (resultCode == Activity.RESULT_OK) {
 				// Image captured and saved to fileUri specified in the Intent
 				if (null != newImagePath) {
 					//image.setImageURI(newImagePath);
-					launchCropIntentForEdit(CAMERA_PIC_REQUEST);
+					launchCropIntentForEdit(CAMERA_PIC_REQUEST_FOR_EDIT);
 				}
 			} else {
 				storage.deleteFileIfExist(newImagePath);
 				newImagePath = null;
 			}
-		} else if (EditItemActivity.CROP_FROM_CAMERA == requestCode) {
+		} else if (EditItemActivity.CROP_FROM_CAMERA_FOR_EDIT == requestCode) {
 			if (resultCode == Activity.RESULT_OK) {
 				if (null != newCropImagePath) {
 					imageView.setImageURI(newCropImagePath);
@@ -743,7 +731,7 @@ public class EditItemActivity extends Activity {
 				storage.deleteFileIfExist(newCropImagePath);
 				newCropImagePath = null;
 			}
-		} else if (EditItemActivity.EDIT_FROM_FILE == requestCode) {
+		} else if (EditItemActivity.EDIT_FROM_FILE_FOR_EDIT == requestCode) {
 			if (resultCode == Activity.RESULT_OK) {
 				if (null != newEditImagePath) {
 					imageView.setImageURI(newEditImagePath);
@@ -753,13 +741,13 @@ public class EditItemActivity extends Activity {
 				storage.deleteFileIfExist(newEditImagePath);
 				newEditImagePath = null;
 			}
-		} else if (EditItemActivity.PICK_FROM_GALLERY == requestCode) {
+		} else if (EditItemActivity.PICK_FROM_GALLERY_FOR_EDIT == requestCode) {
 			if (resultCode == Activity.RESULT_OK) {
 				newGalleryImagePath = data.getData();
 				//image.setImageURI(newGalleryImagePath);
-				launchCropIntentForEdit(PICK_FROM_GALLERY);
+				launchCropIntentForEdit(PICK_FROM_GALLERY_FOR_EDIT);
 			}
-		} else if (EditItemActivity.CROP_FROM_GALLERY == requestCode) {
+		} else if (EditItemActivity.CROP_FROM_GALLERY_FOR_EDIT == requestCode) {
 			if (resultCode == Activity.RESULT_OK) {
 				if (null != newCropGalleryImagePath) {
 					imageView.setImageURI(newCropGalleryImagePath);
@@ -771,9 +759,9 @@ public class EditItemActivity extends Activity {
 				newGalleryImagePath = null;
 			}			
 		} else if (CAMERA_PIC_REQUEST_FOR_ADD == requestCode) { // Add activity new image
-			launchCropIntent();
+			launchCropIntentForAdd();
 		} else if (CROP_FROM_CAMERA_FOR_ADD == requestCode) {
-			ItemData.ItemDataBuilder itemDataBuilder = createItemDataBuilder();
+			ItemData.ItemDataBuilder itemDataBuilder = createItemDataBuilderForAdd();
 			new ImageSubSampler(context).subSampleCroppedUri(itemDataBuilder
 					.buildByGender(up.getGender()), imageView, context);
 		}
@@ -782,7 +770,7 @@ public class EditItemActivity extends Activity {
 	/**
 	 * This is called by Add activity to launch camera
 	 */
-	private void launchCameraIntent() {		
+	private void launchCameraIntentForAdd() {		
 		// Create a new intent to launch the MediaStore, Image capture function
 		// Hint: use standard Intent from MediaStore class
 		// See: http://developer.android.com/reference/android/provider/MediaStore.html
@@ -797,7 +785,7 @@ public class EditItemActivity extends Activity {
 		// from the MediaStore class, EXTRA_OUTPUT
 		i1.putExtra(MediaStore.EXTRA_OUTPUT, newFileUri); // ALDBG this will not be used in CreateStoryFragment.java due to some bug - imagePath is never assigned a value
 		//ALDBG we must use the whole Uri, otherwise, image will not be displayed  fragment.imagePath = Uri.parse(newFile.getPath());
-		imagePath = newFileUri;
+		imagePathForAdd = newFileUri;
 		
 		// Start a new activity for result, using the new intent and the request
 		// code CAMERA_PIC_REQUEST
@@ -807,7 +795,7 @@ public class EditItemActivity extends Activity {
 	/**
 	 * This is called by Add activity to create an ItemData from the views.
 	 */
-	private ItemData.ItemDataBuilder createItemDataBuilder() {
+	private ItemData.ItemDataBuilder createItemDataBuilderForAdd() {
 		final EditText itemName = (EditText) findViewById(R.id.item_name);
 		final EditText itemDesc = (EditText) findViewById(R.id.item_description);
 		final EditText itemTempMax = (EditText) findViewById(R.id.item_max_temp);
@@ -820,12 +808,12 @@ public class EditItemActivity extends Activity {
 		final Spinner itemMaterial = (Spinner) findViewById(R.id.item_material);
 		
 		ItemData.ItemDataBuilder itemDataBuilder = new ItemData.ItemDataBuilder(
-				imagePath.toString(), 
+				imagePathForAdd.toString(), 
 				ItemColorEnum.valueOf(itemColor.getSelectedItem().toString()), 
 				0,//Integer.valueOf(itemTempMin.getText().toString()), 
 				0,//Integer.valueOf(itemTempMax.getText().toString()), 
 				ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString()),
-				cropImagePath.toString())
+				cropImagePathForAdd.toString())
 				//.brand(itemBrand.getText().toString())
 				//.age(Double.valueOf(itemAge.getText().toString()))
 				.material(ItemMaterialEnum.valueOf(itemMaterial.getSelectedItem().toString()))
@@ -856,7 +844,7 @@ public class EditItemActivity extends Activity {
 	 * This is called by Add activity to launch crop action from image taken 
 	 * from camera.
 	 */
-	private void launchCropIntent() {
+	private void launchCropIntentForAdd() {
     	Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setType("image/*");
         
@@ -870,19 +858,19 @@ public class EditItemActivity extends Activity {
             return;
         } else {
     		// generate a new Uri for the new cropped image
-        	cropImagePath = storage.getOutputImageFileUri(
+        	cropImagePathForAdd = storage.getOutputImageFileUri(
     				MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE, true);
         	
         	final Spinner itemCategory = (Spinner) findViewById(R.id.item_category);
         	
-        	intent.setData(imagePath) // set the input to the picture taken by camera
+        	intent.setData(imagePathForAdd) // set the input to the picture taken by camera
         	.putExtra("outputX", ItemData.getCropWidthFromCategory(ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString())))
         	.putExtra("outputY", ItemData.getCropWidthFromCategory(ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString())))
         	.putExtra("aspectX", 1)
         	.putExtra("aspectY", 1)
         	.putExtra("scale", true)
         	.putExtra("return-data", false) // don't return bitmap data
-        	.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, cropImagePath); // set the name of the output cropped image
+        	.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, cropImagePathForAdd); // set the name of the output cropped image
         	
         	// Create the following intent to avoid the following  error 
         	// No Activity found to handle Intent { act=... (has extras) }
@@ -897,12 +885,12 @@ public class EditItemActivity extends Activity {
 	/**
 	 * This is called by Add activity to check if the views have valid values.
 	 */
-	private boolean isInputValid() {
+	private boolean isInputValidForAdd() {
 		//final EditText itemTempMax = (EditText) findViewById(R.id.item_max_temp);
 		//final EditText itemTempMin = (EditText) findViewById(R.id.item_min_temp);
 		
 		// image field cannot be null
-		if (null == imagePath) {
+		if (null == imagePathForAdd) {
 			Toast.makeText(context, 
 					R.string.add_item_message_no_image, 
 					Toast.LENGTH_SHORT)
@@ -926,13 +914,13 @@ public class EditItemActivity extends Activity {
 	
 	private void resetButtonHandlerForAdd() {
 		// Delete original image
-		if (imagePath != null) {
-			storage.deleteFileIfExist(imagePath);
+		if (imagePathForAdd != null) {
+			storage.deleteFileIfExist(imagePathForAdd);
 		}
 		
-		// Delete cropped image and clear view
-		if (cropImagePath != null) {
-			storage.deleteFileIfExist(cropImagePath);
+		// Delete cropped image and clear ImageView
+		if (cropImagePathForAdd != null) {
+			storage.deleteFileIfExist(cropImagePathForAdd);
 			imageView.setImageResource(0);
 		}
 		
@@ -987,13 +975,173 @@ public class EditItemActivity extends Activity {
 
 		if (Environment.MEDIA_MOUNTED.equals(Environment
 				.getExternalStorageState())) {
-			launchCameraIntent();
+			launchCameraIntentForAdd();
 		} else {
 			Toast.makeText(context, 
 					R.string.edit_item_message_no_external_storage, 
 					Toast.LENGTH_SHORT)
 					.show();	
-		}				
-
+		}
 	}
+	
+	private void newImageHandlerForEdit() {
+		// Create dialog for NewImage button
+		final String [] items			= new String [] {"Take from camera", "Select from gallery"};				
+		android.widget.ArrayAdapter<String> adapter	= new android.widget.ArrayAdapter<String> (getApplicationContext(), android.R.layout.select_dialog_item,items);
+		AlertDialog.Builder builder		= new AlertDialog.Builder(this);
+		builder.setTitle("Select Image");
+		builder.setAdapter( adapter, new DialogInterface.OnClickListener() {
+			public void onClick( DialogInterface dialog, int item ) { //pick from camera
+				if (item == 0) {
+					if (Environment.MEDIA_MOUNTED.equals(Environment
+							.getExternalStorageState())) {
+						launchCameraIntentForEdit();
+					} else {
+						Toast.makeText(context, 
+								R.string.edit_item_message_no_external_storage, 
+								Toast.LENGTH_SHORT)
+								.show();	
+					}
+				} else { // pick from gallery
+					launchGalleryIntentForEdit();
+				}
+			}
+		} );
+		final AlertDialog dialog = builder.create();
+		
+		dialog.show();
+	}
+	
+	private void saveButtonHandlerForEdit() {
+		Toast.makeText(getApplicationContext(), "Save Button was clicked", Toast.LENGTH_LONG).show();
+		
+		if (!isInputValidForEdit()) {
+			return;
+		}
+
+		// if Uri newImagePath is valid --> a new picture was taken
+		// delete ItemData's original imageLink
+		// update ItemData's original imageLink with the newly taken picture
+		// invalidate variable Uri newImagePath 
+		if (null != newImagePath) {
+			storage.deleteFileIfExist(Uri.parse(itemData.getImageLink()));
+			itemData.setImageLink(newImagePath.toString());
+			newImagePath = null; // so that onBackPressed doesn't delete this
+		}
+
+		// if Uri newCropImagePath is valid --> a new picture was taken and cropped
+		// delete ItemData's cropped cropImageLink
+		// update ItemData's cropped cropImageLink with the newly cropped picture
+		// invalidate variable Uri newCropImagePath 
+		if (null != newCropImagePath) {
+			if (CropImageStatus.NEW_IMAGE_NEWER == cropStatus) {
+				storage.deleteFileIfExist(Uri.parse(itemData.getCropImageLink()));
+				itemData.setCropImageLink(newCropImagePath.toString());
+				newCropImagePath = null; // so that onBackPressed doesn't delete this						
+			}
+		}
+
+		// if Uri newEditImagePath is valid --> the original ItemData was re-cropped
+		// delete ItemData's cropped cropImageLink
+		// update ItemData's cropped cropImageLink with the newly cropped picture
+		// invalidate variable Uri newEditImagePath 
+		if (null != newEditImagePath) {
+			if (CropImageStatus.EDIT_IMAGE_NEWER == cropStatus) {
+				storage.deleteFileIfExist(Uri.parse(itemData.getCropImageLink()));
+				itemData.setCropImageLink(newEditImagePath.toString());
+				newEditImagePath = null; // so that onBackPressed doesn't delete this												
+			}
+		}
+
+		if (null != newCropGalleryImagePath) {
+			if (CropImageStatus.NEW_IMAGE_NEWER == cropStatus) {
+				if (null != newGalleryImagePath) {
+					storage.deleteFileIfExist(Uri.parse(itemData.getImageLink()));
+					itemData.setImageLink(newGalleryImagePath.toString());							
+				}
+				storage.deleteFileIfExist(Uri.parse(itemData.getCropImageLink()));
+				itemData.setCropImageLink(newCropGalleryImagePath.toString());
+				newCropGalleryImagePath = null; // so that onBackPressed doesn't delete this												
+			}
+		}
+
+		// create new ItemData from views in Edit activity
+		itemData = createItemDataBuilderForEdit().build();
+		// Log.i(TAG, "buttonSave" + itemData.toString());
+
+		// update the database with the newly create ItemData
+		itemDatabaseHelper.updateItemDataRecord(itemData);
+
+		onBackPressed(); // same as hit back key
+	}
+	
+	/**
+	 * This is called by Edit activity to check if the views have valid values.
+	 */
+	private boolean isInputValidForEdit() {
+		// image field cannot be null
+		if ((null == itemData.getImageLink()) // itemData doesn't have any image
+				&& (null == newImagePath) // user didn't take new image
+				&& (null == newEditImagePath) // user didn't edit the itemData image
+				&& (null == newCropGalleryImagePath) // user didn't crop any image from gallery
+				) {
+			Toast.makeText(context, 
+					R.string.add_item_message_no_image, 
+					Toast.LENGTH_SHORT)
+					.show();
+			return false;
+		}
+		
+		return true;
+	}
+
+	/**
+	 * This is called by Add activity to create an ItemData from the views.
+	 */
+	private ItemData.ItemDataBuilder createItemDataBuilderForEdit() {
+		final EditText itemName = (EditText) findViewById(R.id.item_name);
+		final EditText itemDesc = (EditText) findViewById(R.id.item_description);
+		final EditText itemTempMax = (EditText) findViewById(R.id.item_max_temp);
+		final EditText itemTempMin = (EditText) findViewById(R.id.item_min_temp);
+		final EditText itemAge = (EditText) findViewById(R.id.item_age);
+		final EditText itemBrand = (EditText) findViewById(R.id.item_brand);
+		final Spinner itemColor = (Spinner) findViewById(R.id.item_color);
+		final Spinner itemCategory = (Spinner) findViewById(R.id.item_category);
+		final Spinner itemStyle = (Spinner) findViewById(R.id.item_style);
+		final Spinner itemMaterial = (Spinner) findViewById(R.id.item_material);
+		final CheckBox isDirtyCheckbox = (CheckBox) findViewById(R.id.item_dirty);
+		
+		ItemData.ItemDataBuilder itemDataBuilder = new ItemData.ItemDataBuilder(
+				itemData.getImageLink(), 
+				ItemColorEnum.valueOf(itemColor.getSelectedItem().toString()), 
+				0,//Integer.valueOf(itemTempMin.getText().toString()), 
+				0,//Integer.valueOf(itemTempMax.getText().toString()), 
+				ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString()),
+				itemData.getCropImageLink())
+				.id(itemData.getId())
+				.material(ItemMaterialEnum.valueOf(itemMaterial.getSelectedItem().toString()))
+				.style(ItemStyleEnum.valueOf(itemStyle.getSelectedItem().toString()))
+				.dirty(isDirtyCheckbox.isChecked());
+
+		if (!itemName.getText().toString().isEmpty()) {
+			itemDataBuilder.name(itemName.getText().toString());
+		}
+		
+		if (!itemDesc.getText().toString().isEmpty()) {
+			itemDataBuilder.description(itemDesc.getText().toString());
+		}
+		
+		if (!itemBrand.getText().toString().isEmpty()) {
+			itemDataBuilder.brand(itemBrand.getText().toString());
+		}
+		
+		if (!itemAge.getText().toString().isEmpty()) {
+			itemDataBuilder.age(Double.valueOf(itemAge.getText().toString()));
+		} else {
+			itemDataBuilder.age(0);
+		}
+
+		return itemDataBuilder;
+	}
+		
 }

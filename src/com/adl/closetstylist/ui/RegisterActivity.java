@@ -91,7 +91,7 @@ public class RegisterActivity extends Activity implements LocationListener, Plac
 		initListener();		
 		initGenderDependency();
 		
-		itemDatabaseHelper = new ItemDatabaseHelper(this);
+		itemDatabaseHelper = ItemDatabaseHelper.getInstance(this);
 		Button buttonLoc = (Button) findViewById(R.id.btn_get_location);
 		buttonLoc.setOnClickListener(new OnClickListener() {
 			@Override
