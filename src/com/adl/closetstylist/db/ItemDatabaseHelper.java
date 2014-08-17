@@ -1129,7 +1129,7 @@ public class ItemDatabaseHelper {
 		return result;		
 	}
 
-	private Cursor queryOutfitHistoryDataInTimeRange(long timeStart, long timeEnd) {
+	public Cursor queryOutfitHistoryDataInTimeRange(long timeStart, long timeEnd) {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		qb.setTables(TABLE_OUTFIT_HISTORY);
 		qb.appendWhere(Schema.OutfitHistory.Cols.DATE_TIME + " >= (?) AND "
@@ -1142,7 +1142,7 @@ public class ItemDatabaseHelper {
 		return c;
 	}
 	
-	private OutfitHistoryData getOutfitHistoryDataFromCursor(Cursor cursor) {
+	public OutfitHistoryData getOutfitHistoryDataFromCursor(Cursor cursor) {
 		long rowID = cursor.getLong(cursor.getColumnIndex(Schema.OutfitHistory.Cols.ID));
 		long topId = cursor.getLong(cursor.getColumnIndex(Schema.OutfitHistory.Cols.TOP));
 		ItemData top = getItemFromId(topId);
