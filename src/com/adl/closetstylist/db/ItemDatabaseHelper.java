@@ -294,12 +294,21 @@ public class ItemDatabaseHelper {
 	final private Context mContext; // used to mContext.deleteDatabase(DATABASE_NAME);
 	private SQLiteDatabase database;
 	private ItemDataOpenHelper mItemDataOpenHelper;
+	private static ItemDatabaseHelper mInstance = null; // copied from http://stackoverflow.com/questions/18147354/sqlite-connection-leaked-although-everything-closed/18148718#18148718
 	
-	public ItemDatabaseHelper(Context context) {
+	private ItemDatabaseHelper(Context context) {
 		mContext = context;
 		mItemDataOpenHelper = new ItemDataOpenHelper(context);
 		database = mItemDataOpenHelper.getWritableDatabase();
 		populateMatchingTables();
+	}
+	
+	public static ItemDatabaseHelper getInstance(Context ctx) {
+		if (mInstance == null) {
+			mInstance = new ItemDatabaseHelper(ctx.getApplicationContext());
+		}
+		
+		return mInstance;
 	}
 
 	/*
