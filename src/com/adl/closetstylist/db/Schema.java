@@ -67,4 +67,15 @@ public class Schema {
 			public static final String POINT = "Point";
 		}
 	}
+	
+	public static class OutfitHistory {
+		public static class Cols {
+			public static final String ID = "_id";
+			public static final String BOTTOM = "Bottom";
+			public static final String TOP = "Top";
+			public static final String OUTER = "Outer";
+			public static final String POINT = "Point";
+			public static final String DATE_TIME = "DateTime";
+		}
+	}
 }

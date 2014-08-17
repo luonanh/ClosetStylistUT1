@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -24,6 +25,8 @@ import com.adl.closetstylist.ItemColorEnum;
 import com.adl.closetstylist.ItemData;
 import com.adl.closetstylist.ItemMaterialEnum;
 import com.adl.closetstylist.ItemStyleEnum;
+import com.adl.closetstylist.Outfit;
+import com.adl.closetstylist.OutfitHistoryData;
 import com.adl.closetstylist.R;
 import com.adl.closetstylist.UserProfile;
 import com.adl.closetstylist.match.clothes.ColorMatchingRecord;
@@ -36,7 +39,7 @@ public class ItemDatabaseHelper {
 	
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "closetStylist.db";
-	private static final String TABLE_NAME = "itemData_db";
+	private static final String TABLE_ITEM = "itemData_db";
 	private static final String WHERE_CLAUSE = Schema.Item.Cols.ID + " = ? ";
 	private static final String TABLE_USER_PROFILE = "userProfile_db";
 	private static final String WHERE_USER_PROFILE_CLAUSE = Schema.UserProfile.Cols.ID + " = ? ";
@@ -45,6 +48,8 @@ public class ItemDatabaseHelper {
 	private static final String TABLE_PAIR_MATCHING_MALE = "pairMatchingMale_db";
 	private static final String TABLE_PAIR_MATCHING_FEMALE = "pairMatchingFemale_db";
 	private static final String TABLE_COLOR_MATCHING_DEFAULT = "colorMatchingDefault_db";
+	private static final String TABLE_OUTFIT_HISTORY = "outfitHistory_db";
+	private static final String WHERE_OUTFIT_HISTORY_CLAUSE = Schema.OutfitHistory.Cols.ID + " = ? ";
 
 	private UserProfile defaultMaleUserProfile 
 			= new UserProfile.UserProfileBuilder("anh", "pwd", GenderEnum.MALE, 78758)
@@ -653,12 +658,12 @@ public class ItemDatabaseHelper {
 		contentValues.put(Schema.Item.Cols.DIRTY, item.getDirty().toString());
 		contentValues.put(Schema.Item.Cols.WORN_TIME, item.getWornTime());
 		contentValues.put(Schema.Item.Cols.MAX_WORN_TIME, item.getMaxWornTime());
-		database.insert(TABLE_NAME, null, contentValues);
+		database.insert(TABLE_ITEM, null, contentValues);
 	}
 
 	public void deleteItemDataRecord(ItemData item) {
 		String[] whereArgs = { String.valueOf(item.getId()) };
-		database.delete(TABLE_NAME, WHERE_CLAUSE, whereArgs);
+		database.delete(TABLE_ITEM, WHERE_CLAUSE, whereArgs);
 	}
 
 	/*
@@ -668,7 +673,7 @@ public class ItemDatabaseHelper {
 		// Update
 		Log.i(LOG_TAG, "updateRecord" + item.toString());
 		String[] whereArgs = { String.valueOf(item.getId()) };
-		Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_NAME, 
+		Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_ITEM, 
 				getContentValuesFromItemData(item), WHERE_CLAUSE, whereArgs));
 		
 		// Verify
@@ -684,7 +689,7 @@ public class ItemDatabaseHelper {
 	 */
 	public Cursor queryItemFromId(long id) {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(TABLE_NAME);
+		qb.setTables(TABLE_ITEM);
 		qb.appendWhere(Schema.Item.Cols.ID + " IN (?)");
 		String[] whereArgs = {String.valueOf(id)};
 		String orderBy = Schema.Item.Cols.ID + " DESC";
@@ -699,7 +704,7 @@ public class ItemDatabaseHelper {
 	 */
 	public Cursor queryDirtyItem(boolean dirty) {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(TABLE_NAME);
+		qb.setTables(TABLE_ITEM);
 		qb.appendWhere(Schema.Item.Cols.DIRTY + " IN (?)");
 		String[] whereArgs = {String.valueOf(dirty)};
 		String orderBy = Schema.Item.Cols.ID + " DESC";
@@ -715,7 +720,7 @@ public class ItemDatabaseHelper {
 	 */
 	public Cursor queryAllOuter() {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(TABLE_NAME);
+		qb.setTables(TABLE_ITEM);
 		qb.appendWhere(Schema.Item.Cols.CATEGORY + " IN (?) AND "
 				+ Schema.Item.Cols.STYLE + " IN (?,?)");
 		String[] whereArgs = {String.valueOf(ItemCategoryEnum.Top.ordinal()), 
@@ -734,7 +739,7 @@ public class ItemDatabaseHelper {
 	 */
 	public Cursor queryAllOuterPerDirty(boolean dirty) {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(TABLE_NAME);
+		qb.setTables(TABLE_ITEM);
 		qb.appendWhere(Schema.Item.Cols.CATEGORY + " IN (?) AND "
 				+ Schema.Item.Cols.STYLE + " IN (?,?) AND "
 				+ Schema.Item.Cols.DIRTY + " IN (?)");
@@ -768,7 +773,7 @@ public class ItemDatabaseHelper {
 	 */
 	public Cursor queryAllTopExceptOuter() {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(TABLE_NAME);
+		qb.setTables(TABLE_ITEM);
 		qb.appendWhere(Schema.Item.Cols.CATEGORY + " IN (?) AND "
 				+ Schema.Item.Cols.STYLE + " NOT IN (?,?)");
 		String[] whereArgs = {String.valueOf(ItemCategoryEnum.Top.ordinal()), 
@@ -787,7 +792,7 @@ public class ItemDatabaseHelper {
 	 */
 	public Cursor queryAllTopExceptOuterPerDirty(boolean dirty) {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(TABLE_NAME);
+		qb.setTables(TABLE_ITEM);
 		qb.appendWhere(Schema.Item.Cols.CATEGORY + " IN (?) AND "
 				+ Schema.Item.Cols.STYLE + " NOT IN (?,?) AND "
 				+ Schema.Item.Cols.DIRTY + " IN (?)");
@@ -800,6 +805,17 @@ public class ItemDatabaseHelper {
 		Cursor c = qb.query(database, null, null, whereArgs, null, null,
 				orderBy);
 		return c;
+	}
+	
+	public ItemData getItemFromId(long id) {
+		ItemData item = null;
+		Cursor c = queryItemFromId(id);
+		if (c != null) {
+			if (c.moveToFirst()) { // this is necessary to avoid CursorIndexOutOfBound 
+				item = getItemDataFromCursor(c);
+			}
+		}
+		return item;
 	}
 	
 	public ArrayList<ItemData> getAllTopExceptOuterPerDirty(boolean dirty) {
@@ -817,7 +833,7 @@ public class ItemDatabaseHelper {
 
 	public Cursor getCursorToAllItemDataRecord() {
 		return database.rawQuery(
-				"SELECT * FROM " + TABLE_NAME, 
+				"SELECT * FROM " + TABLE_ITEM, 
 				null);
 	}
 	
@@ -839,7 +855,7 @@ public class ItemDatabaseHelper {
 	
 	public void deleteMyCloset() {
 		// thought this was working once but not anymore mContext.deleteDatabase(TABLE_NAME);
-		database.delete(TABLE_NAME, null, null);
+		database.delete(TABLE_ITEM, null, null);
 	}
 	
 	/*
@@ -847,7 +863,7 @@ public class ItemDatabaseHelper {
 	 */
 	public static ItemData getItemDataFromCursor(Cursor cursor) {
 		// Dump all the rows pointed to by cursor 
-		Log.i(LOG_TAG, DatabaseUtils.dumpCursorToString(cursor));
+		//Log.i(LOG_TAG, DatabaseUtils.dumpCursorToString(cursor));
 		long rowID = cursor.getLong(cursor.getColumnIndex(Schema.Item.Cols.ID));
 		String name = cursor.getString(cursor.getColumnIndex(Schema.Item.Cols.NAME));
 		String description = cursor.getString(cursor.getColumnIndex(Schema.Item.Cols.DESCRIPTION));
@@ -918,7 +934,7 @@ public class ItemDatabaseHelper {
 	 */
 	public Cursor queryTop() {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(TABLE_NAME);
+		qb.setTables(TABLE_ITEM);
 		//qb.appendWhere(Schema.Item.Cols.CATEGORY + " IN (?,?,?)");
 		//String[] whereArgs = {"jacket", "shirt", "t-shirt"};
 		qb.appendWhere(Schema.Item.Cols.CATEGORY + " IN (?)");
@@ -952,7 +968,7 @@ public class ItemDatabaseHelper {
 	 */
 	public Cursor queryBottom() {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(TABLE_NAME);
+		qb.setTables(TABLE_ITEM);
 		//qb.appendWhere(Schema.Item.Cols.CATEGORY + " IN (?,?)");
 		//String[] whereArgs = {"jeans", "short"};
 		qb.appendWhere(Schema.Item.Cols.CATEGORY + " IN (?)");
@@ -970,7 +986,7 @@ public class ItemDatabaseHelper {
 	 */
 	public Cursor queryBottomPerDirty(boolean dirty) {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(TABLE_NAME);
+		qb.setTables(TABLE_ITEM);
 		//qb.appendWhere(Schema.Item.Cols.CATEGORY + " IN (?,?)");
 		//String[] whereArgs = {"jeans", "short"};
 		qb.appendWhere(Schema.Item.Cols.CATEGORY + " IN (?) AND "
@@ -1023,7 +1039,7 @@ public class ItemDatabaseHelper {
 	 */
 	public Cursor queryItemCleanTemperature(ItemCategoryEnum category, int tempMax, int tempMin) {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		qb.setTables(TABLE_NAME);
+		qb.setTables(TABLE_ITEM);
 		//qb.appendWhere(Schema.Item.Cols.CATEGORY + " IN (?,?,?)");
 		//String[] whereArgs = {"jacket", "shirt", "t-shirt"};
 		qb.appendWhere(Schema.Item.Cols.CATEGORY + " IN (?) AND "
@@ -1074,6 +1090,80 @@ public class ItemDatabaseHelper {
 
 	/*
 	 * ************************************************************************
+	 * OutfitHistoryData
+	 * ************************************************************************ 
+	 */
+	
+	/*
+	 * no id
+	 */
+	public void saveOutfitHistoryDataRecord(OutfitHistoryData ohd) {
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(Schema.OutfitHistory.Cols.TOP, ohd.getOutfit().getTop().getId());
+		contentValues.put(Schema.OutfitHistory.Cols.BOTTOM, ohd.getOutfit().getBottom().getId());
+		if (ohd.getOutfit().isOuterExist()) {
+			contentValues.put(Schema.OutfitHistory.Cols.OUTER, ohd.getOutfit().getOuter().getId());
+		} else {
+			contentValues.putNull(Schema.OutfitHistory.Cols.OUTER);
+		}
+		contentValues.put(Schema.OutfitHistory.Cols.DATE_TIME, ohd.getTime());
+		database.insert(TABLE_OUTFIT_HISTORY, null, contentValues);
+	}
+
+	public void deleteOutfitHistoryDataRecord(OutfitHistoryData ohd) {
+		String[] whereArgs = { String.valueOf(ohd.getId()) };
+		database.delete(TABLE_OUTFIT_HISTORY, WHERE_OUTFIT_HISTORY_CLAUSE, whereArgs);
+	}
+	
+	public List<OutfitHistoryData> getOutfitHistoryDataInTimeRange(long timeStart, long timeEnd) {
+		ArrayList<OutfitHistoryData> result = new ArrayList<OutfitHistoryData>();
+		Cursor c = queryOutfitHistoryDataInTimeRange(timeStart, timeEnd);
+		Log.i(LOG_TAG, DatabaseUtils.dumpCursorToString(c));
+		if (c != null) {
+			if (c.moveToFirst()) {
+				do {
+					result.add(getOutfitHistoryDataFromCursor(c));
+				} while (c.moveToNext() == true);
+			}
+		}
+		return result;		
+	}
+
+	private Cursor queryOutfitHistoryDataInTimeRange(long timeStart, long timeEnd) {
+		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+		qb.setTables(TABLE_OUTFIT_HISTORY);
+		qb.appendWhere(Schema.OutfitHistory.Cols.DATE_TIME + " >= (?) AND "
+				+ Schema.OutfitHistory.Cols.DATE_TIME + " <= (?)");
+		String[] whereArgs = {String.valueOf(timeStart), String.valueOf(timeEnd)};
+		String orderBy = Schema.OutfitHistory.Cols.DATE_TIME + " ASC";
+		
+		Cursor c = qb.query(database, null, null, whereArgs, null, null,
+				orderBy);
+		return c;
+	}
+	
+	private OutfitHistoryData getOutfitHistoryDataFromCursor(Cursor cursor) {
+		long rowID = cursor.getLong(cursor.getColumnIndex(Schema.OutfitHistory.Cols.ID));
+		long topId = cursor.getLong(cursor.getColumnIndex(Schema.OutfitHistory.Cols.TOP));
+		ItemData top = getItemFromId(topId);
+		long bottomId = cursor.getLong(cursor.getColumnIndex(Schema.OutfitHistory.Cols.BOTTOM));
+		ItemData bottom = getItemFromId(bottomId);
+		ItemData outer = null;
+		long outerId = -1;
+		if (!cursor.isNull(cursor.getColumnIndex(Schema.OutfitHistory.Cols.OUTER))) {
+			outerId = cursor.getLong(cursor.getColumnIndex(Schema.OutfitHistory.Cols.OUTER));
+			outer = getItemFromId(outerId);
+		}
+		long time = cursor.getLong(cursor.getColumnIndex(Schema.OutfitHistory.Cols.DATE_TIME));
+		Outfit.OutfitBuilder ob = new Outfit.OutfitBuilder(top); 
+		OutfitHistoryData ohd = new OutfitHistoryData(ob.bottom(bottom).outer(outer).build());
+		ohd.setId(rowID);
+		ohd.setTime(time);
+		return ohd;
+	}
+
+	/*
+	 * ************************************************************************
 	 * ItemDataOpenHelper
 	 * ************************************************************************ 
 	 */
@@ -1096,8 +1186,8 @@ public class ItemDatabaseHelper {
 					+ Schema.UserProfile.Cols.LATITUDE + " TEXT, "
 					+ Schema.UserProfile.Cols.LONGTITUDE + " TEXT)");
 			
-			Log.i(LOG_TAG, "CREATE TABLE " + TABLE_NAME);
-			db.execSQL("CREATE TABLE " + TABLE_NAME + "("
+			Log.i(LOG_TAG, "CREATE TABLE " + TABLE_ITEM);
+			db.execSQL("CREATE TABLE " + TABLE_ITEM + "("
 					+ Schema.Item.Cols.ID + " INTEGER PRIMARY KEY, "
 					+ Schema.Item.Cols.NAME + " TEXT, "
 					+ Schema.Item.Cols.DESCRIPTION + " TEXT, "
@@ -1160,12 +1250,20 @@ public class ItemDatabaseHelper {
 					+ Schema.ColorMatching.Cols.TOP + " INTEGER, "
 					+ Schema.ColorMatching.Cols.POINT + " INTEGER)");
 
+			Log.i(LOG_TAG, "CREATE TABLE " + TABLE_OUTFIT_HISTORY);
+			db.execSQL("CREATE TABLE " + TABLE_OUTFIT_HISTORY + "("
+					+ Schema.OutfitHistory.Cols.ID + " INTEGER PRIMARY KEY, "
+					+ Schema.OutfitHistory.Cols.TOP + " INTEGER, "
+					+ Schema.OutfitHistory.Cols.BOTTOM + " INTEGER, "
+					+ Schema.OutfitHistory.Cols.OUTER + " INTEGER, "
+					+ Schema.OutfitHistory.Cols.DATE_TIME + " INTEGER)");
+
 			Log.i(LOG_TAG, "DONE CREATE TABLE");
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME + "");
+			db.execSQL("DROP TABLE IF EXISTS " + TABLE_ITEM + "");
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_PROFILE + "");
 			onCreate(database);
 		}
