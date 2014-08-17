@@ -1,6 +1,7 @@
 package com.adl.closetstylist.ui.navigationdrawer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import com.adl.closetstylist.R;
 import com.adl.closetstylist.ui.ActionDescriptor;
 import com.adl.closetstylist.ui.view.ActionItemView;
+import com.adl.closetstylist.ui.LoginActivity;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -143,7 +145,8 @@ public class NavigationDrawerFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				
+                Intent i = new Intent(getActivity(), LoginActivity.class);
+                startActivity(i);
 			}
 		});
 		

@@ -548,7 +548,13 @@ public class EditItemActivity extends Activity {
 								} catch (Exception e) {
 									Log.e(TAG, "Exception Caught => " + e.getMessage());
 									e.printStackTrace();
-								} 
+									finish();
+								}
+								
+								Toast.makeText(context, 
+										"The item was deleted", 
+										Toast.LENGTH_SHORT)
+										.show();
 								setResult(DELETE_OK);//returnCode 100 means delete ok
 								finish();
 							}
