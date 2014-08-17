@@ -72,7 +72,7 @@ public class SDCardStorage implements StorageInterface {
 			Log.d(LOG_TAG, "Search for " + item.getImageLink());
 			// File file = new File(imagePath.toString()) ALDBG doesn't work,
 			// don't know detail
-			File file = new File(URI.create(item.getImageLink()));
+			File file = new File(URI.create(item.getImageLink())); // ALDBG TODO fix delete images from Galery later
 			if (file.exists()) { // only delete if the image was stored on SD
 									// card
 				Log.d(LOG_TAG, item.getImageLink() + " exists");

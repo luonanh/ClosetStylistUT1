@@ -548,7 +548,13 @@ public class EditItemActivity extends Activity {
 								} catch (Exception e) {
 									Log.e(TAG, "Exception Caught => " + e.getMessage());
 									e.printStackTrace();
-								} 
+									finish();
+								}
+								
+								Toast.makeText(context, 
+										"The item was deleted", 
+										Toast.LENGTH_SHORT)
+										.show();
 								setResult(DELETE_OK);//returnCode 100 means delete ok
 								finish();
 							}
@@ -987,7 +993,8 @@ public class EditItemActivity extends Activity {
 	private void newImageHandlerForEdit() {
 		// Create dialog for NewImage button
 		final String [] items			= new String [] {"Take from camera", "Select from gallery"};				
-		android.widget.ArrayAdapter<String> adapter	= new android.widget.ArrayAdapter<String> (getApplicationContext(), android.R.layout.select_dialog_item,items);
+		android.widget.ArrayAdapter<String> adapter	= new android.widget.ArrayAdapter<String> (
+				getApplicationContext(), R.layout.simple_list_item_blacktext,items);
 		AlertDialog.Builder builder		= new AlertDialog.Builder(this);
 		builder.setTitle("Select Image");
 		builder.setAdapter( adapter, new DialogInterface.OnClickListener() {
