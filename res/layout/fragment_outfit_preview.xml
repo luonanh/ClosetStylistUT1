@@ -1,0 +1,254 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:gravity="top"
+    tools:context="com.adl.closetstylist.ui.actionfragment.DashboardFragment" >
+
+    <LinearLayout
+        android:id="@+id/outfitoftheday_rating_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rating_bg"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icn_rating" />
+
+        <TextView
+            android:id="@+id/outfitoftheday_rank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="(3)"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/register_textsize" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/outfitoftheday_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/outfitoftheday_actionbar"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/outfitoftheday_headpart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <!-- <ImageButton
+                android:id="@+id/head_garment_image"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/item_img_placeholder" /> -->
+            <TextView 
+                android:id="@+id/outfitoftheday_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Score is..."/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/outfitoftheday_toppart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="2"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/btn_sliding_left"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/left_sliding_arrow" />
+
+            <ImageButton
+                android:id="@+id/top_garment_image"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/btn_sliding_right"
+                android:layout_toRightOf="@id/btn_sliding_left"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/sample_top" />
+
+            <ImageButton
+                android:id="@id/btn_sliding_right"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/right_sliding_arrow" />
+
+            <ImageButton
+                android:id="@+id/top_garment_outer_image"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@id/top_garment_image"
+                android:layout_marginBottom="0dp"
+                android:layout_marginRight="0dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/sample_outer" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/outfitoftheday_bottompart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="3"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@id/btn_sliding_left"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/left_sliding_arrow" />
+
+            <ImageButton
+                android:id="@+id/bottom_garment_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@id/btn_sliding_right"
+                android:layout_toRightOf="@id/btn_sliding_left"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/sample_pant" />
+
+            <ImageButton
+                android:id="@id/btn_sliding_right"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/right_sliding_arrow" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- ================ ACTION BAR ================ -->
+
+    <LinearLayout
+        android:id="@id/outfitoftheday_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/ab_bg"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/btn_occation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icn_ab_ocassion" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Occation"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/actionicon_textsize"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btn_previous_outfit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/btn_ab_previous" />
+
+        <TextView
+            android:id="@+id/btn_wear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="WEAR"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/actionbar_textsize"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/btn_next_outfit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/btn_ab_next" />
+
+        <LinearLayout
+            android:id="@+id/btn_share"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icn_ab_share" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Share"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/actionicon_textsize"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/menu_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@id/outfitoftheday_actionbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone" >
+
+        <ListView
+            android:id="@+id/menu_occation"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/abc_menu_dropdown_panel_holo_dark"
+            android:entries="@array/occations" 
+            android:visibility="gone" >
+        </ListView>
+    </RelativeLayout>
+
+</RelativeLayout>
