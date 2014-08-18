@@ -29,7 +29,9 @@ import com.adl.closetstylist.CurrentWeatherInfo;
 import com.adl.closetstylist.ImageSubSampler;
 import com.adl.closetstylist.ItemData;
 import com.adl.closetstylist.Outfit;
+import com.adl.closetstylist.OutfitHistoryData;
 import com.adl.closetstylist.R;
+import com.adl.closetstylist.TimeHelper;
 import com.adl.closetstylist.UserProfile;
 import com.adl.closetstylist.WeatherInfo;
 import com.adl.closetstylist.db.ItemDatabaseHelper;
@@ -56,22 +58,21 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 	private Context context;
 	private List<Outfit> outfit;
 	private int outfitIndex;
-	private ImageButton top;
-	private ImageButton outer;
-	private ImageButton bottom;
-	private ItemData topItem;
-	private ItemData bottomItem;
-	private ItemData outerItem;
+	private ImageButton top; 	// the image in the topmost, not necessary the image of the "top" ItemData 
+	private ImageButton outer; 	// the side image, not necessary the image of the "outer" ItemData
+	private ImageButton bottom; // the image in the bottommost
+	private ItemData topItem; 	// the current top ItemData, its image is not necessary on the topmost part. Tied to topIndex after clicking top arrows, but tied to outfit.getTop() after clicking double arrows. 
+	private ItemData bottomItem;// the current bottom ItemData. Tied to bottomIndex after clicking top arrows, but tied to outfit.getOuter() after clicking double arrows.
+	private ItemData outerItem; // the current outer ItemData, its image is not necessary on the side. Tied to outerIndex after clicking top arrows, but tied to outfit.getBottom() after clicking double arrows.
 	private boolean upperImageIsTop = true; // true - traversing through top; false - traversing through outer
 	private TextView rank;
 	private TextView score;
-	private int topIndex;
-	private int outerIndex;
-	private int bottomIndex;
+	private int topIndex;		// used to track the current index in the topList when pressing back and forward arrow
+	private int outerIndex;		// used to track the current index in the outerList when pressing back and forward arrow
+	private int bottomIndex;	// used to track the current index in the bottomList when pressing back and forward arrow
 	private List<ItemData> topList;
 	private List<ItemData> outerList;
 	private List<ItemData> bottomList;
-	//private TextC
 
 	enum BottomAction {
 		OCCATION(R.id.btn_occation, R.id.menu_occation),
@@ -236,10 +237,6 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 		score = (TextView) rootView.findViewById(R.id.outfitoftheday_score);
 		score.setTextColor(Color.MAGENTA);
 		
-		resetTopForUpperImage();
-		resetOuterForUpperImage();
-		resetBottomForLowerImage();
-		
 		// start clothes matching process
 		outfitIndex = 0;
 		new RankOutfitTask().execute(OccasionEnum.Casual);
@@ -258,20 +255,21 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 			@Override
 			public void onClick(View v) {
 				if (upperImageIsTop) {
+					// Adjust index
 					if (topIndex <= 0) {
 						topIndex = topList.size() - 1;
 					} else {
 						topIndex--;
 					}
-					updateUpperImage(topList.get(topIndex));
 				} else {
+					// Adjust index
 					if (outerIndex <= 0) {
 						outerIndex = outerList.size() - 1;
 					} else {
 						outerIndex--;
 					}
-					updateUpperImage(outerList.get(outerIndex));
 				}
+				updateUpperImage();
 			}
 		});
 		
@@ -280,20 +278,21 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 			@Override
 			public void onClick(View v) {
 				if (upperImageIsTop) {
+					// Adjust index
 					if (topIndex >= (topList.size() - 1)) {
 						topIndex = 0;
 					} else {
 						topIndex++;
 					}
-					updateUpperImage(topList.get(topIndex));
 				} else {
+					// Adjust index
 					if (outerIndex >= (outerList.size() - 1)) {
 						outerIndex = 0;
 					} else {
 						outerIndex++;
 					}
-					updateUpperImage(outerList.get(outerIndex));
 				}
+				updateUpperImage();
 			}
 		});
 		
@@ -308,7 +307,7 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 				} else {
 					bottomIndex--;
 				}
-				updateLowerImage(bottomList.get(bottomIndex));			
+				updateLowerImage();			
 			}
 		});
 		
@@ -321,11 +320,17 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 				} else {
 					bottomIndex++;
 				}
-				updateLowerImage(bottomList.get(bottomIndex));
+				updateLowerImage();
 			}
 		});
 	}
 
+	/**
+	 * This method handle the following events
+	 * Click on ImageButton top - go to view activity with the current item display in the top.
+	 * Click on ImageButton bottom - go to view activity with the current item display in the bottom.
+	 * Click on ImageButton outer - swap the top with outer.
+	 */
 	private void setupRelationBetweenTopPartAndOuterPart(final View rootView) {
 		top = (ImageButton) rootView.findViewById(R.id.top_garment_image);
 		outer = (ImageButton) rootView.findViewById(R.id.top_garment_outer_image);
@@ -504,6 +509,12 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 		super.onResume();
 		((MainActivity) getActivity()).onSectionAttached(getArguments().getInt(
 				ARG_ACTION_ID));
+		
+		// Reset the topIndex, outerIndex, bottomIndex
+		// Obtain the List of ItemData for top, outer, bottom.
+		resetTopForUpperImage();
+		resetOuterForUpperImage();
+		resetBottomForLowerImage();
 	}
 
 	private class RankOutfitTask extends AsyncTask<OccasionEnum, Void, List<Outfit>>{
@@ -610,7 +621,10 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 	}
 	
 	/**
-	 * This method swaps the ItemData objects in the outer image and the top image
+	 * This method 
+	 *  - swaps the ItemData objects in the ImageButton outer and the ImageButton top
+	 *  - DOES NOT update the topItem and outerItem
+	 *  - update tag of ImageButton top and outer 
 	 */
 	private void swapTopAndOuterInUpperImage() {
 		ItemData oldOuterItem = (ItemData) outer.getTag();
@@ -671,12 +685,18 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 		bottomIndex = 0;
 		bottomList = itemDatabaseHelper.getAllBottomPerDirty(false);
 	}
-	
+
 	/**
 	 * This method updates the upper image as user traverses through the list
 	 * using the backward and forward arrow buttons for the top.
 	 */
-	private void updateUpperImage(ItemData item) {
+	private void updateUpperImage() {
+		ItemData item = null;
+		if (upperImageIsTop) {
+			item = (topItem = topList.get(topIndex));
+		} else {
+			item = (outerItem = outerList.get(outerIndex));
+		}
 		new ImageSubSampler(context).subSampleCroppedUri(item, top, context);
 		top.setTag(item);
 	}
@@ -685,9 +705,10 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 	 * This method updates the lower image as user traverses through the list
 	 * using the backward and forward arrow buttons for the bottom.
 	 */
-	private void updateLowerImage(ItemData item) {
+	private void updateLowerImage() {
+		ItemData item = (bottomItem = bottomList.get(bottomIndex));
 		new ImageSubSampler(context).subSampleCroppedUri(item, bottom, context);
-		top.setTag(item);
+		bottom.setTag(item);
 	}
 	
 	/**
@@ -695,32 +716,80 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 	 */
 	private void wearOnClickHandler() {
 		if (null != outfit) {
-			if (null != outfit.get(outfitIndex).getTop()) {
-				ItemData temp = outfit.get(outfitIndex).getTop();
-				temp.incWornTime();
-				itemDatabaseHelper.updateItemDataRecord(temp);
-				resetTopForUpperImage();
+			// Must have top in the upper image, while outer is on the side
+			if (!upperImageIsTop) {
+				swapTopAndOuterInUpperImage();
 			}
 			
-			if (null != outfit.get(outfitIndex).getBottom()) {
-				ItemData temp = outfit.get(outfitIndex).getBottom();
-				temp.incWornTime();
-				itemDatabaseHelper.updateItemDataRecord(temp);
-				resetBottomForLowerImage();
+		//OutfitHistoryData
+			Outfit.OutfitBuilder outfitBuilder = null;
+			
+			/*
+			.bottom(bottom.getItemData())
+			.score(totalScore)
+			.build();
+			*/
+			
+			// topItem is the current "Top" ItemData
+			if (null != topItem) {
+				topItem.incWornTime();
+				itemDatabaseHelper.updateItemDataRecord(topItem);
+				resetTopForUpperImage();
+				outfitBuilder = new Outfit.OutfitBuilder(topItem);
 			}
 
-			if (null != outfit.get(outfitIndex).getOuter()) {
-				ItemData temp = outfit.get(outfitIndex).getOuter();
-				temp.incWornTime();
-				itemDatabaseHelper.updateItemDataRecord(temp);
+			// bottomItem is the current "Bottom" ItemData
+			if (null != bottomItem) {
+				bottomItem.incWornTime();
+				itemDatabaseHelper.updateItemDataRecord(bottomItem);
+				resetBottomForLowerImage();
+				outfitBuilder.bottom(bottomItem);
+			}
+
+			// outerItem is the current "outer" ItemData
+			if (null != outerItem) {
+				outerItem.incWornTime();
+				itemDatabaseHelper.updateItemDataRecord(outerItem);
 				resetOuterForUpperImage();
+				outfitBuilder.outer(outerItem);
 			}
 		
+			//Outfit o = outfitBuilder.build();
+			OutfitHistoryData ohd = new OutfitHistoryData(outfitBuilder.build());
+			itemDatabaseHelper.saveOutfitHistoryDataRecord(ohd);
 			Toast.makeText(context, "This outfit is chosen", 
 					Toast.LENGTH_SHORT).show();
+
+			List<OutfitHistoryData> temp 
+				= itemDatabaseHelper.getOutfitHistoryDataInTimeRange(
+						TimeHelper.getStartOfToday(), 
+						TimeHelper.getEndOfToday());
+			for (OutfitHistoryData ohd2: temp) {
+				Log.i(TAG, ohd2.toString());
+			}
+			Toast.makeText(context, "Verify this outfit was written to database", 
+					Toast.LENGTH_SHORT).show();
+
 		} else {
 			Toast.makeText(context, R.string.outfit_message_no_outfit, 
 					Toast.LENGTH_SHORT).show();
 		}
+	}
+	
+	/**
+	 * Assumption: the upper image must be top and the side image is outer
+	 */
+	private ItemData getCurrentTop() {
+		ItemData t = null;
+		
+		if (null != outfit) {
+			ItemData t2 = outfit.get(outfitIndex).getTop(); // current outfit's Top
+			if (null != t2) {
+				
+			}
+			//upperImageIsTop
+			
+		}
+		return t;
 	}
 }
