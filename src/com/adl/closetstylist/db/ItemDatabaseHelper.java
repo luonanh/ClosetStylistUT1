@@ -58,7 +58,7 @@ public class ItemDatabaseHelper {
 					.build();
 
 	private UserProfile defaultFemaleUserProfile 
-			= new UserProfile.UserProfileBuilder("an", "pwd", GenderEnum.FEMALE, 78717)
+			= new UserProfile.UserProfileBuilder("an", "pwd", GenderEnum.FEMALE, 78758)
 					.laundrySchedule(1)
 					.laundryDay("Sunday")
 					.build();

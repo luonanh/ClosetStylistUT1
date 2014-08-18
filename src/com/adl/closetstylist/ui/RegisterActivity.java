@@ -141,7 +141,7 @@ public class RegisterActivity extends Activity implements LocationListener, Plac
 		RadioGroup genderGroup = (RadioGroup) findViewById(R.id.genderGroup);
 		int i = genderGroup.indexOfChild(genderGroup.findViewById(genderGroup.getCheckedRadioButtonId()));
 		switch (i) {
-		case 0:
+		case 1:
 			return GenderEnum.FEMALE;
 		default:
 			return GenderEnum.MALE;
