@@ -541,10 +541,10 @@ public class ItemDatabaseHelper {
 	 * param UserProfile must have a valid id field 
 	 */
 	public void updateUserProfileRecord(UserProfile usr) {
-		Log.i(LOG_TAG, "updateRecord" + usr.toString());
+		//Log.i(LOG_TAG, "updateRecord" + usr.toString());
 		String[] whereArgs = { String.valueOf(usr.getId()) };
-		Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_USER_PROFILE, 
-				getContentValuesFromUserProfile(usr), WHERE_CLAUSE, whereArgs));
+		//Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_USER_PROFILE, 
+		//		getContentValuesFromUserProfile(usr), WHERE_CLAUSE, whereArgs));
 	}
 
 	public Cursor getCursorToAllUserProfileRecord() {
@@ -671,16 +671,16 @@ public class ItemDatabaseHelper {
 	 */
 	public void updateItemDataRecord(ItemData item) {
 		// Update
-		Log.i(LOG_TAG, "updateRecord" + item.toString());
+		//Log.i(LOG_TAG, "updateRecord" + item.toString());
 		String[] whereArgs = { String.valueOf(item.getId()) };
-		Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_ITEM, 
-				getContentValuesFromItemData(item), WHERE_CLAUSE, whereArgs));
+		//Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_ITEM, 
+		//		getContentValuesFromItemData(item), WHERE_CLAUSE, whereArgs));
 		
 		// Verify
 		Cursor c = queryItemFromId(item.getId());
 		ArrayList<ItemData> it = getItemDataArrayListFromCursor(c);
 		if (it.size() > 0) {
-			Log.i(LOG_TAG, "updateRecord" + it.get(0).toString());	
+			//Log.i(LOG_TAG, "updateRecord" + it.get(0).toString());	
 		}
 	}
 	
@@ -1118,7 +1118,7 @@ public class ItemDatabaseHelper {
 	public List<OutfitHistoryData> getOutfitHistoryDataInTimeRange(long timeStart, long timeEnd) {
 		ArrayList<OutfitHistoryData> result = new ArrayList<OutfitHistoryData>();
 		Cursor c = queryOutfitHistoryDataInTimeRange(timeStart, timeEnd);
-		Log.i(LOG_TAG, DatabaseUtils.dumpCursorToString(c));
+		//Log.i(LOG_TAG, DatabaseUtils.dumpCursorToString(c));
 		if (c != null) {
 			if (c.moveToFirst()) {
 				do {
