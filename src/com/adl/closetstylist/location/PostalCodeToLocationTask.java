@@ -15,9 +15,6 @@ import com.adl.closetstylist.ui.PlaceRecordContainerInterface;
  * Modified based on PlaceDownloaderTask.java in iRemember
  */
 public class PostalCodeToLocationTask extends AsyncTask<Integer, Void, PlaceRecord> {
-	// Change to false if you don't have network access
-	private static final boolean HAS_NETWORK = true;
-
     // put your www.geonames.org account name here.
     private static String USERNAME = "anhpopeye";
 
