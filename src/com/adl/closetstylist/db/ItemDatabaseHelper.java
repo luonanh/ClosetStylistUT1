@@ -902,7 +902,7 @@ public class ItemDatabaseHelper {
 			.dirty(Boolean.parseBoolean(dirty))
 			.wornTime(wornTime)
 			.maxWornTime(maxWornTime)
-			.build();
+			.buildFromDatabase();
 	}
 	
 	/*

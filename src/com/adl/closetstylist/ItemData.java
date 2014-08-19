@@ -74,8 +74,8 @@ public class ItemData implements Parcelable {
 		this.imageLink = builder.imageLink;
 		this.cropImageLink = builder.cropImageLink;		
 		this.color = builder.color;
-		//this.tempMin = builder.tempMin;
-		//this.tempMax = builder.tempMax;
+		this.tempMin = builder.tempMin;
+		this.tempMax = builder.tempMax;
 		this.category = builder.category;
 		this.brand = builder.brand;
 		setAge(builder.age);
@@ -83,8 +83,8 @@ public class ItemData implements Parcelable {
 		this.style = builder.style;
 		this.dirty = builder.dirty;
 		setMaxWornTimeFromStyle();
-		setTempMinFromMaterial();
-		setTempMaxFromMaterial();
+		//setTempMinFromMaterial();
+		//setTempMaxFromMaterial();
 	}
 
 	public String getCropImageLink() {
@@ -151,7 +151,7 @@ public class ItemData implements Parcelable {
 		this.tempMax = tempMax;
 	}
 	
-	private void setTempMaxFromMaterial() {
+	protected void setTempMaxFromMaterial() {
 		//"Cotton_Or_Cotton_Blend", "Denim", "Down", "Jersey_Knit", "Leather", 
 		//"Linen", "Nylon", "Performance", "Polyester", "Silk", "Spandex", 
 		//"Wool_Or_Wool_Blend"
@@ -164,15 +164,15 @@ public class ItemData implements Parcelable {
 		} else if (this.material == ItemMaterialEnum.Down) {
 			this.tempMax = 40;
 		} else {
-			this.tempMax = Integer.MAX_VALUE;
+			this.tempMax = 999; //Integer.MAX_VALUE;
 		}
 	}
 
-	private void setTempMinFromMaterial() {
+	protected void setTempMinFromMaterial() {
 		if (this.material == ItemMaterialEnum.Silk) {
 			this.tempMin = 50;
 		} else {
-			this.tempMin = Integer.MIN_VALUE;
+			this.tempMin = -999; //Integer.MIN_VALUE;
 		}
 	}
 
@@ -540,11 +540,13 @@ public class ItemData implements Parcelable {
 		 * to rebuild an ItemData from database.
 		 * In this case, there's no need to use Gender information
 		 */
-		public ItemData build() {
+		public ItemData buildFromDatabase() {
 			ItemData itemData = new ItemData(this);
+			/*
 			if (age > 50) {
 				throw new IllegalStateException("Age out of range");
 			}
+			*/
 			return itemData;
 		}
 		
@@ -556,6 +558,8 @@ public class ItemData implements Parcelable {
 		 */
 		public ItemData buildByGender(GenderEnum gender) {
 			ItemData itemData = new ItemData(this);
+			itemData.setTempMinFromMaterial();
+			itemData.setTempMaxFromMaterial();
 			switch (gender) {
 			case FEMALE:
 				itemData.setTempMinFromStyleFemale();

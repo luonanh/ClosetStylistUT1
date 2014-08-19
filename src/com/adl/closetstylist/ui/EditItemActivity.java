@@ -1073,7 +1073,7 @@ public class EditItemActivity extends Activity {
 		}
 
 		// create new ItemData from views in Edit activity
-		itemData = createItemDataBuilderForEdit().build();
+		itemData = createItemDataBuilderForEdit().buildFromDatabase();
 		// Log.i(TAG, "buttonSave" + itemData.toString());
 
 		// update the database with the newly create ItemData
@@ -1121,8 +1121,8 @@ public class EditItemActivity extends Activity {
 		ItemData.ItemDataBuilder itemDataBuilder = new ItemData.ItemDataBuilder(
 				itemData.getImageLink(), 
 				ItemColorEnum.valueOf(itemColor.getSelectedItem().toString()), 
-				0,//Integer.valueOf(itemTempMin.getText().toString()), 
-				0,//Integer.valueOf(itemTempMax.getText().toString()), 
+				itemData.getTempMin(),//Integer.valueOf(itemTempMin.getText().toString()), 
+				itemData.getTempMax(),//Integer.valueOf(itemTempMax.getText().toString()), 
 				ItemCategoryEnum.valueOf(itemCategory.getSelectedItem().toString()),
 				itemData.getCropImageLink())
 				.id(itemData.getId())
