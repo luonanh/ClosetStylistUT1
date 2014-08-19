@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.ViewParent;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
@@ -123,7 +124,7 @@ public class EditItemActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edititem);
-
+		
 		itemDatabaseHelper = ItemDatabaseHelper.getInstance(this);
 		context = getApplicationContext();
 		up = itemDatabaseHelper.getCurrentUserProfile();

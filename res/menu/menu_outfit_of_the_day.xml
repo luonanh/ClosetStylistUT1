@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/menu_occasion"
+        android:icon="@drawable/icn_ab_ocassion"
+        android:title="Occasion"
+        app:showAsAction="always" >
+        <item
+            android:id="@+id/menu_occasion_1"
+            android:title="casual"/>
+        <item
+            android:id="@+id/menu_occasion_2"
+            android:title="day out"/>
+        <item
+            android:id="@+id/menu_occasion_3"
+            android:title="night out"/>
+        <item
+            android:id="@+id/menu_occasion_4"
+            android:title="formal"/>
+    </item>
+
+</menu>

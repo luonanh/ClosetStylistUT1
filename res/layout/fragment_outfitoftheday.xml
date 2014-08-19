@@ -165,7 +165,8 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical" 
+            android:visibility="gone" >
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -213,7 +214,8 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"

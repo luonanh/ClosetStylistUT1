@@ -1,0 +1,43 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <RelativeLayout
+        android:id="@+id/clickZone"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/image1"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="6dip"
+            android:layout_marginTop="10dp"
+            android:scaleType="fitCenter" />
+
+        <ImageView
+            android:id="@+id/image2"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="6dip"
+            android:layout_marginTop="10dp"
+            android:scaleType="fitCenter" />
+
+        <ImageView
+            android:id="@+id/image3"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="6dip"
+            android:layout_marginTop="10dp"
+            android:scaleType="fitCenter" />
+
+    </RelativeLayout>
+
+</merge>

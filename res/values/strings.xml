@@ -13,6 +13,8 @@
     
     <string name="dashboard">Dashboard</string>
     <string name="outfitoftheday">Outfit of the Day</string>
+    <string name="outfit_preview">Outfit Preview</string>
+    <string name="outfit_history">Outfit History</string>
     <string name="mycloset">My Closet</string>
     <string name="mylaundrybag">My Laundry Bag</string>
     <string name="settings">Settings</string>
@@ -59,6 +61,8 @@
     <string name="please_select_style">Please select style</string>
     <string name="please_select_color">Please select color</string>
     <string name="please_select_material">Please select material</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
     
     
 </resources>

@@ -60,6 +60,8 @@ public class MainActivity extends ActionBarActivity implements
 		ActionDescriptor actionDescriptor = ActionDescriptor.getById(position);
 		
 		switch (actionDescriptor) {
+		case OutfitPreview:
+			break;
 		case Settings:
 			Intent i = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(i);

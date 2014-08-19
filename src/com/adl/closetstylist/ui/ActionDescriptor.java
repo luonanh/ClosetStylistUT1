@@ -1,15 +1,20 @@
 package com.adl.closetstylist.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.ActionBar;
 import com.adl.closetstylist.R;
 
 public enum ActionDescriptor {
 	Dashboard(1, R.string.dashboard, R.drawable.icn_dashboard, ActionBar.NAVIGATION_MODE_STANDARD),
 	OutfitOfTheDay(2, R.string.outfitoftheday, R.drawable.icn_outfitofday, ActionBar.NAVIGATION_MODE_STANDARD),
+	OutfitHistory(6, R.string.outfit_history, R.drawable.icn_outfitofday, ActionBar.NAVIGATION_MODE_STANDARD),
 	MyCloset(3, R.string.mycloset, R.drawable.icn_mycloset, ActionBar.NAVIGATION_MODE_TABS),
 	MyLaundryBag(4, R.string.mylaundrybag, R.drawable.icn_laundry, ActionBar.NAVIGATION_MODE_STANDARD),
 	Settings(5, R.string.settings, R.drawable.icn_settings, ActionBar.NAVIGATION_MODE_STANDARD),
-	Help(6, R.string.help, R.drawable.icn_help, ActionBar.NAVIGATION_MODE_STANDARD);
+	Help(7, R.string.help, R.drawable.icn_help, ActionBar.NAVIGATION_MODE_STANDARD),
+	OutfitPreview(8, R.string.outfit_preview, R.drawable.icn_outfitofday);
 	
 	private int id;
 	private int labelResourceId;
@@ -29,16 +34,11 @@ public enum ActionDescriptor {
 	}
 	
 	public static ActionDescriptor getById(int id) {
-		switch (id) {
-		case 1: return Dashboard;
-		case 2: return OutfitOfTheDay;
-		case 3: return MyCloset;
-		case 4: return MyLaundryBag;
-		case 5: return Settings;
-		case 6: return Help;
-		default:
-			return null;
-		}
+		for (ActionDescriptor actDesc : values())
+			if (actDesc.getId() == id)
+				return actDesc;
+		
+		return null;
 	}
 
 	public int getLabelResourceId() {
@@ -59,6 +59,20 @@ public enum ActionDescriptor {
 
 	public int getActionBarNavigationMode() {
 		return actionBarNavigationMode;
+	}
+	
+	public static ActionDescriptor[] getDisplayableActions() {
+		List<ActionDescriptor> result = new ArrayList<ActionDescriptor>();
+		for (ActionDescriptor action : values()) {
+			switch (action) {
+			case OutfitPreview:
+				break;
+			default:
+				result.add(action);
+			}
+		}
+		
+		return result.toArray(new ActionDescriptor[result.size()]);
 	}
 
 //	public Fragment getFragment() {

@@ -14,6 +14,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -240,9 +243,37 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 		// start clothes matching process
 		outfitIndex = 0;
 		new RankOutfitTask().execute(OccasionEnum.Casual);
+		
+		setHasOptionsMenu(true);
 		return rootView;
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.menu_outfit_of_the_day, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_occasion_1:
+			Toast.makeText(getActivity(), "occasion_1", Toast.LENGTH_LONG).show();
+			return true;
+		case R.id.menu_occasion_2:
+			Toast.makeText(getActivity(), "occasion_2", Toast.LENGTH_LONG).show();
+			return true;
+		case R.id.menu_occasion_3:
+			Toast.makeText(getActivity(), "occasion_3", Toast.LENGTH_LONG).show();
+			return true;
+		case R.id.menu_occasion_4:
+			Toast.makeText(getActivity(), "occasion_4", Toast.LENGTH_LONG).show();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}	
+	
 	private void initLeftRightButtonInTopAndBottomPart(final View rootView) {
 		View topPartLeftBtn = rootView.findViewById(R.id.outfitoftheday_toppart).findViewById(R.id.btn_sliding_left);
 		View topPartRightBtn = rootView.findViewById(R.id.outfitoftheday_toppart).findViewById(R.id.btn_sliding_right);

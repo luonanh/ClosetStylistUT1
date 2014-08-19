@@ -13,5 +13,6 @@
     <color name="register_textcolor">#000000</color>
     <color name="register_texthintcolor">#7D7D7D</color>
     <color name="register_heading_color">#3EBD9C</color>
+    <color name="strip_background">#D4DCE6</color>
 
 </resources>

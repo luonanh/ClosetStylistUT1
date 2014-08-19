@@ -1,5 +1,7 @@
 package com.adl.closetstylist.ui.actionfragment;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 import android.app.ActionBar;
@@ -44,7 +46,7 @@ public class OutfitHistoryFragment extends ActionFragment implements ActionBar.T
 	 * Returns a new instance of this fragment for the given section number.
 	 */
 	public OutfitHistoryFragment() {
-		super(ActionDescriptor.MyCloset);
+		super(ActionDescriptor.OutfitHistory);
 	}
 
 	@Override
@@ -56,7 +58,7 @@ public class OutfitHistoryFragment extends ActionFragment implements ActionBar.T
 		final ActionBar actionBar = getActivity().getActionBar();
 		actionBar.setNavigationMode(actionDescriptor.getActionBarNavigationMode());
 		
-		View rootView = inflater.inflate(R.layout.fragment_my_closet,
+		View rootView = inflater.inflate(R.layout.fragment_outfit_history,
 				container, false);
 
 		// Create the adapter that will return a fragment for each of the three
@@ -74,7 +76,11 @@ public class OutfitHistoryFragment extends ActionFragment implements ActionBar.T
 				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 					@Override
 					public void onPageSelected(int position) {
-						actionBar.setSelectedNavigationItem(position);
+						if (position + 2 > mSectionsPagerAdapter.count) {
+							mSectionsPagerAdapter.count += 2;
+							mSectionsPagerAdapter.notifyDataSetChanged();
+						}
+							
 					}
 				});
 
@@ -90,17 +96,6 @@ public class OutfitHistoryFragment extends ActionFragment implements ActionBar.T
 					.setTabListener(this));
 		}
 		
-		Button addItemBtn = (Button) rootView.findViewById(R.id.btn_additem);
-		addItemBtn.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(getActivity(), EditItemActivity.class);
-				i.putExtra(EditItemActivity.ACTION_TYPE, ActionType.ADD.name());
-                startActivityForResult(i, EditItemActivity.ADD_ITEM_REQUESTCODE);
-			}
-		});
-
 		// For debug only - Set up options to create default closet
 		setHasOptionsMenu(true);
 		return rootView;
@@ -193,35 +188,33 @@ public class OutfitHistoryFragment extends ActionFragment implements ActionBar.T
 	 * one of the sections/tabs/pages.
 	 */
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
+		int count = 3;
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			// getItem is called to instantiate the fragment for the given page.
-			// Return a PlaceholderFragment (defined as a static inner class
-			// below).
-			ItemDataListFragment fragment = ItemDataListFragment.newInstance(GarmentCategory.getById(position + 1));
+			OutfitHistoryDataListFragment fragment = new OutfitHistoryDataListFragment(position);
 			return fragment;
 		}
 
 		@Override
 		public int getCount() {
 			// Show 3 total pages.
-			return GarmentCategory.values().length;
+			return count;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			Locale l = Locale.getDefault();
-			
-			GarmentCategory cat = GarmentCategory.getById(position+1);
-			if (cat != null)
-				return getString(cat.getLabelResourceId());
-			
-			return null;
+			if (position == 0) {
+				return "Today";
+			} else {
+				Calendar calendar = Calendar.getInstance();
+				calendar.add(Calendar.DATE, -position);
+				SimpleDateFormat dateFormat = new SimpleDateFormat("MMM-dd");
+				return dateFormat.format(calendar.getTime());
+			}
 		}
 	}
 }

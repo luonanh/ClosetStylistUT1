@@ -8,18 +8,22 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_additem"/>
+        android:layout_height="wrap_content" >
+        <!--
+		    This title strip will display the currently visible page title, as well as the page
+		    titles for adjacent pages.
+        -->
 
-    <Button
-        android:id="@id/btn_additem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="5dp"
-        android:text="ADD ITEM"
-        android:textColor="@android:color/white"
-        android:background="@drawable/btn_add_item_bg" />
+        <android.support.v4.view.PagerTabStrip
+            android:id="@+id/pager_title_strip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="@color/strip_background"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:textColor="@color/text_tab_color" />
+    />
+    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

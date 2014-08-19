@@ -2,6 +2,7 @@ package com.adl.closetstylist;
 
 import com.adl.closetstylist.db.ItemDatabaseHelper;
 import com.adl.closetstylist.ui.view.ImageAndTwoLineItem;
+import com.adl.closetstylist.ui.view.OutfitItemView;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -21,9 +22,8 @@ public class OutfitHistoryDataAdapter extends CursorAdapter {
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		//OutfitImage view = new OutfitImage(context);
-		//return view;
-		return null;
+		OutfitItemView view = new OutfitItemView(context);
+		return view;
 	}
 
 	@Override
@@ -32,14 +32,16 @@ public class OutfitHistoryDataAdapter extends CursorAdapter {
 		OutfitHistoryData outfitHistoryData = itemDatabaseHelper.getOutfitHistoryDataFromCursor(cursor);
 		
 		if (view != null) {
-			// OutfitImage v = (OutfitImage) view;
+			OutfitItemView v = (OutfitItemView) view;
 			
-			// Populate top image
+			v.setTag(outfitHistoryData);
+			
+			v.getImage1().setImageResource(R.drawable.face_img_placeholder);
 
-			// Populate bottom image
+			v.getImage2().setImageResource(R.drawable.face_img_placeholder);
 			
 			if (outfitHistoryData.getOutfit().isOuterExist()) {
-				// Populate outer image
+				v.getImage3().setImageResource(R.drawable.face_img_placeholder);
 			}
 		}
 	}

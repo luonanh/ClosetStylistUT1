@@ -12,6 +12,8 @@ public abstract class ActionFragment extends Fragment{
 		case MyCloset: return new MyClosetFragment();
 		case MyLaundryBag: return new MyLaundryBagFragment();
 		case OutfitOfTheDay: return new OutfitOfTheDayFragment();
+		case OutfitHistory: return new OutfitHistoryFragment();
+		case OutfitPreview: return new OutfitPreviewFragment();
 		case Settings:
 		case Help:
 		default:
