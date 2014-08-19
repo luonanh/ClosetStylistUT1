@@ -577,7 +577,12 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 			if ((wi != null) && (up != null)) {
 				dialog.setMessage("Searching for the right outfit");
 			} else {
-				dialog.setMessage("Cannot obtain the necessary information!");
+				if ((wi == null) && (up == null))
+					dialog.setMessage("Cannot obtain weather AND user profile information!");
+				if (up == null)
+					dialog.setMessage("Cannot obtain weather information!");
+				if (wi == null)
+					dialog.setMessage("Cannot obtain user profile information!");
 			}
 			dialog.show();
 			
@@ -638,6 +643,10 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 			} else {
 				Toast.makeText(context, R.string.outfit_message_no_outfit, 
 						Toast.LENGTH_SHORT).show();
+			}
+			
+			if (dialog.isShowing()) {
+				dialog.dismiss();
 			}
 		}
 	}
