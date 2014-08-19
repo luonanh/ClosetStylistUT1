@@ -51,6 +51,7 @@ public class OutfitHistoryDataListFragment extends Fragment {
 //		ohdAdapter = new OutfitHistoryDataAdapter(getActivity(), 
 //				cursorToOutfitHistoryDataList);
 		
+		//please change this with your OutfitHistoryDataAdapter
 		ohdAdapter = new OutfitArrayAdapter(getActivity());
 
 		View rootView = inflater.inflate(R.layout.fragment_my_closet_garment_category, container,
@@ -62,7 +63,6 @@ public class OutfitHistoryDataListFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Toast.makeText(getActivity(), "item clicked", Toast.LENGTH_LONG).show();
 				OutfitPreviewFragment actionFragment = (OutfitPreviewFragment) ActionFragment.getNewActionFragment(ActionDescriptor.OutfitPreview);
 				actionFragment.setOutfit((OutfitHistoryData) view.getTag());
 				FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -70,7 +70,7 @@ public class OutfitHistoryDataListFragment extends Fragment {
 						.replace(R.id.container, actionFragment).addToBackStack(null).commit();
 			}
 		};
-		listView.setOnItemClickListener(listener );
+		listView.setOnItemClickListener(listener);
 		return rootView;
 	}
 
