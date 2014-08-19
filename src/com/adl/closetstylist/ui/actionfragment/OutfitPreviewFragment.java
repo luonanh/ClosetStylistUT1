@@ -44,7 +44,7 @@ public class OutfitPreviewFragment extends ActionFragment {
 	private ItemData outerItem; // the current outer ItemData, its image is not necessary on the side. Tied to outerIndex after clicking top arrows, but tied to outfit.getBottom() after clicking double arrows.
 	private boolean upperImageIsTop = true; // true - traversing through top; false - traversing through outer
 
-	private OutfitHistoryData outfitHistoryData;
+	private OutfitHistoryData outfitHistoryData; 
 
 	/**
 	 * Returns a new instance of this fragment for the given section number.
@@ -72,7 +72,14 @@ public class OutfitPreviewFragment extends ActionFragment {
 		setupRelationBetweenTopPartAndOuterPart(rootView);
 		
 		//setup view with data from outfitHistoryData
-		
+		new ImageSubSampler(context).subSampleCroppedUri(
+				this.outfitHistoryData.getOutfit().getTop(), top, context);
+		new ImageSubSampler(context).subSampleCroppedUri(
+				this.outfitHistoryData.getOutfit().getBottom(), bottom, context);
+		if (this.outfitHistoryData.getOutfit().isOuterExist()) {
+			new ImageSubSampler(context).subSampleCroppedUri(
+					this.outfitHistoryData.getOutfit().getOuter(), outer, context);
+		}
 		
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
@@ -166,6 +173,7 @@ public class OutfitPreviewFragment extends ActionFragment {
 			return true;
 		case R.id.menu_delete:
 			Toast.makeText(getActivity(), "Delete", Toast.LENGTH_LONG).show();
+			deleteHandler();
 			return true;			
 		default:
 			return super.onOptionsItemSelected(item);
@@ -190,4 +198,22 @@ public class OutfitPreviewFragment extends ActionFragment {
 		}
 	}
 	
+	/**
+	 * Handler for delete.
+	 */
+	private void deleteHandler() {
+		if (this.outfitHistoryData != null) {
+			ItemData top = this.outfitHistoryData.getOutfit().getTop();
+			top.decWornTime(); // decrement the number of worn
+			ItemData bottom = this.outfitHistoryData.getOutfit().getBottom();
+			bottom.decWornTime(); // decrement the number of worn
+			if (this.outfitHistoryData.getOutfit().isOuterExist()) {
+				ItemData outer = this.outfitHistoryData.getOutfit().getOuter();
+				outer.decWornTime(); // decrement the number of worn
+			}
+			
+			// delete from the database
+			itemDatabaseHelper.deleteOutfitHistoryDataRecord(this.outfitHistoryData);
+		}
+	}
 }

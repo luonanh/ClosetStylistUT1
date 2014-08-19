@@ -56,31 +56,23 @@ public class OutfitHistoryDataListFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				OutfitPreviewFragment actionFragment = (OutfitPreviewFragment) ActionFragment.getNewActionFragment(ActionDescriptor.OutfitPreview);
-				actionFragment.setOutfit((OutfitHistoryData) view.getTag());
-				FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-				fragmentManager.beginTransaction()
-						.replace(R.id.container, actionFragment).addToBackStack(null).commit();
+				Cursor c = (Cursor) ohdAdapter.getItem(position);
+				if (null != c) {
+					Log.i(TAG, "Cursor is NOT null");
+					OutfitHistoryData ohd = itemDatabaseHelper.getOutfitHistoryDataFromCursor(c);
+					OutfitPreviewFragment actionFragment = (OutfitPreviewFragment) ActionFragment.getNewActionFragment(ActionDescriptor.OutfitPreview);
+					actionFragment.setOutfit(ohd);
+					FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+					fragmentManager.beginTransaction()
+							.replace(R.id.container, actionFragment).addToBackStack(null).commit();
+					//i.putExtra(Schema.Item.Cols.ID, itemData.getId());
+					Log.i(TAG, "id is: " + ohd.getId());
+				} else {
+					Log.i(TAG, "Cursor is null");
+				}
 			}
 		};
 		listView.setOnItemClickListener(listener);
 		return rootView;
-	}
-
-
-	/**
-	 * This handler will be called by the onItemClick of listView
-	 */
-	private void clickHandler(int position) {
-		Cursor c = (Cursor) ohdAdapter.getItem(position);
-		if (null != c) {
-			Log.i(TAG, "Cursor is NOT null");
-			OutfitHistoryData ohd = itemDatabaseHelper.getOutfitHistoryDataFromCursor(c);
-			//i.putExtra(Schema.Item.Cols.ID, itemData.getId());
-			Log.i(TAG, "id is: " + ohd.getId());
-		} else {
-			Log.i(TAG, "Cursor is null");
-		}
-		//getParentFragment().startActivityForResult(i, EditItemActivity.EDIT_ITEM_REQUESTCODE);
 	}
 }
