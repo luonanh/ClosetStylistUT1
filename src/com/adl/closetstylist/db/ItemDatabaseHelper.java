@@ -325,8 +325,8 @@ public class ItemDatabaseHelper {
 	// TABLE_OCCASION_MATCHING_MALE or TABLE_OCCASION_MATCHING_FEMALE
 	public void saveOccasionMatchingRecord(OccasionMatchingRecord omr, String occasionMatchingRecordTable) {
 		ContentValues c = new ContentValues();
-		c.put(Schema.OccasionMatching.Cols.CATEGORY, omr.getCategory());
-		c.put(Schema.OccasionMatching.Cols.STYLE, omr.getStyle());
+		c.put(Schema.OccasionMatching.Cols.CATEGORY, omr.getCategory().ordinal());
+		c.put(Schema.OccasionMatching.Cols.STYLE, omr.getStyle().ordinal());
 		c.put(Schema.OccasionMatching.Cols.FORMAL, omr.getFormal());
 		c.put(Schema.OccasionMatching.Cols.SEMI_FORMAL, omr.getSemiFormal());
 		c.put(Schema.OccasionMatching.Cols.CASUAL, omr.getCasual());
@@ -338,8 +338,8 @@ public class ItemDatabaseHelper {
 	public static OccasionMatchingRecord getOccasionMatchingRecordFromCursor(Cursor cursor) {
 		long id = cursor.getLong(cursor
 				.getColumnIndex(Schema.OccasionMatching.Cols.ID));
-		String category = cursor.getString(cursor.getColumnIndex(Schema.OccasionMatching.Cols.CATEGORY));
-		String style = cursor.getString(cursor.getColumnIndex(Schema.OccasionMatching.Cols.STYLE));
+		ItemCategoryEnum category = ItemCategoryEnum.values()[cursor.getInt(cursor.getColumnIndex(Schema.OccasionMatching.Cols.CATEGORY))];
+		ItemStyleEnum style = ItemStyleEnum.values()[cursor.getInt(cursor.getColumnIndex(Schema.OccasionMatching.Cols.STYLE))];
 		int formal = cursor.getInt(cursor.getColumnIndex(Schema.OccasionMatching.Cols.FORMAL));
 		int semiFormal = cursor.getInt(cursor.getColumnIndex(Schema.OccasionMatching.Cols.SEMI_FORMAL));
 		int casual = cursor.getInt(cursor.getColumnIndex(Schema.OccasionMatching.Cols.CASUAL));
@@ -1339,7 +1339,7 @@ public class ItemDatabaseHelper {
 			while ((line = reader.readLine()) != null) {
 				String[] parts = line.split(",");
 				OccasionMatchingRecord omr = new OccasionMatchingRecord(
-						parts[0], parts[1], Integer.parseInt(parts[2]), 
+						ItemCategoryEnum.valueOf(parts[0]), ItemStyleEnum.valueOf(parts[1]), Integer.parseInt(parts[2]), 
 						Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), 
 						Integer.parseInt(parts[5]), Integer.parseInt(parts[6]));
 				saveOccasionMatchingRecord(omr, TABLE_OCCASION_MATCHING_MALE);
@@ -1363,7 +1363,7 @@ public class ItemDatabaseHelper {
 			while ((line = reader.readLine()) != null) {
 				String[] parts = line.split(",");
 				OccasionMatchingRecord omr = new OccasionMatchingRecord(
-						parts[0], parts[1], Integer.parseInt(parts[2]), 
+						ItemCategoryEnum.valueOf(parts[0]), ItemStyleEnum.valueOf(parts[1]), Integer.parseInt(parts[2]), 
 						Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), 
 						Integer.parseInt(parts[5]), Integer.parseInt(parts[6]));
 				saveOccasionMatchingRecord(omr, TABLE_OCCASION_MATCHING_FEMALE);
