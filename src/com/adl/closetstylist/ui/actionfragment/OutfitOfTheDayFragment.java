@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -250,7 +251,10 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.menu_outfit_of_the_day, menu);
+		SubMenu occasionMenu = menu.addSubMenu(Menu.NONE, 1, Menu.NONE, R.string.menu_occasion);
+		occasionMenu.setIcon(R.drawable.icn_ab_ocassion);
+		menu.findItem(1).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		inflater.inflate(R.menu.menu_outfit_of_the_day, occasionMenu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 

@@ -162,27 +162,6 @@ public class OutfitHistoryFragment extends ActionFragment implements ActionBar.T
 			FragmentTransaction fragmentTransaction) {
 	}
 
-    // For debug only - Set up options to create default closet
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.menu_my_closet, menu);
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.my_closet_menu_create_default_closet_male:
-			itemDatabaseHelper.createDefaultDatabaseForMale();
-			return true;
-		case R.id.my_closet_menu_create_default_closet_female:
-			itemDatabaseHelper.createDefaultDatabaseForFemale();
-			return true;			
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.

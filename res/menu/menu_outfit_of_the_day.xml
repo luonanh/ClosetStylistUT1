@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
-    <item
+    <!-- <item
         android:id="@+id/menu_occasion"
         android:icon="@drawable/icn_ab_ocassion"
         android:title="Occasion"
-        app:showAsAction="always" >
+        app:showAsAction="always" > -->
         <item
             android:id="@+id/menu_occasion_1"
             android:title="casual"/>
@@ -19,6 +19,6 @@
         <item
             android:id="@+id/menu_occasion_4"
             android:title="formal"/>
-    </item>
+    <!-- </item> -->
 
 </menu>
