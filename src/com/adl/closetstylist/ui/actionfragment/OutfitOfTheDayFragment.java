@@ -636,10 +636,6 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 				} else {
 					updateTopBottomOuter();				
 				}
-				
-				if (dialog.isShowing()) {
-					dialog.dismiss();
-				}
 			} else {
 				Toast.makeText(context, R.string.outfit_message_no_outfit, 
 						Toast.LENGTH_SHORT).show();

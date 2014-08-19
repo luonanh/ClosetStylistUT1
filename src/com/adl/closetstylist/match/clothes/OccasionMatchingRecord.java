@@ -1,18 +1,21 @@
 package com.adl.closetstylist.match.clothes;
 
+import com.adl.closetstylist.ItemCategoryEnum;
+import com.adl.closetstylist.ItemStyleEnum;
+
 
 public class OccasionMatchingRecord {
 
 	private long id;
-	private String category;
-	private String style;
+	private ItemCategoryEnum category;
+	private ItemStyleEnum style;
 	private int formal;
 	private int semiFormal;
 	private int casual;
 	private int dayOut;
 	private int nightOut;
 	
-	public OccasionMatchingRecord(String category, String style, int formal, 
+	public OccasionMatchingRecord(ItemCategoryEnum category, ItemStyleEnum style, int formal, 
 			int semiFormal, int casual, int dayOut, int nightOut) {
 		this.category = category;
 		this.style = style;
@@ -31,19 +34,19 @@ public class OccasionMatchingRecord {
 		this.id = id;
 	}
 
-	public String getCategory() {
+	public ItemCategoryEnum getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(ItemCategoryEnum category) {
 		this.category = category;
 	}
 
-	public String getStyle() {
+	public ItemStyleEnum getStyle() {
 		return style;
 	}
 
-	public void setStyle(String style) {
+	public void setStyle(ItemStyleEnum style) {
 		this.style = style;
 	}
 

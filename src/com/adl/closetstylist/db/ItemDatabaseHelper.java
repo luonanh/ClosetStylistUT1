@@ -58,7 +58,7 @@ public class ItemDatabaseHelper {
 					.build();
 
 	private UserProfile defaultFemaleUserProfile 
-			= new UserProfile.UserProfileBuilder("an", "pwd", GenderEnum.FEMALE, 78717)
+			= new UserProfile.UserProfileBuilder("an", "pwd", GenderEnum.FEMALE, 78758)
 					.laundrySchedule(1)
 					.laundryDay("Sunday")
 					.build();
@@ -325,8 +325,8 @@ public class ItemDatabaseHelper {
 	// TABLE_OCCASION_MATCHING_MALE or TABLE_OCCASION_MATCHING_FEMALE
 	public void saveOccasionMatchingRecord(OccasionMatchingRecord omr, String occasionMatchingRecordTable) {
 		ContentValues c = new ContentValues();
-		c.put(Schema.OccasionMatching.Cols.CATEGORY, omr.getCategory());
-		c.put(Schema.OccasionMatching.Cols.STYLE, omr.getStyle());
+		c.put(Schema.OccasionMatching.Cols.CATEGORY, omr.getCategory().ordinal());
+		c.put(Schema.OccasionMatching.Cols.STYLE, omr.getStyle().ordinal());
 		c.put(Schema.OccasionMatching.Cols.FORMAL, omr.getFormal());
 		c.put(Schema.OccasionMatching.Cols.SEMI_FORMAL, omr.getSemiFormal());
 		c.put(Schema.OccasionMatching.Cols.CASUAL, omr.getCasual());
@@ -338,8 +338,8 @@ public class ItemDatabaseHelper {
 	public static OccasionMatchingRecord getOccasionMatchingRecordFromCursor(Cursor cursor) {
 		long id = cursor.getLong(cursor
 				.getColumnIndex(Schema.OccasionMatching.Cols.ID));
-		String category = cursor.getString(cursor.getColumnIndex(Schema.OccasionMatching.Cols.CATEGORY));
-		String style = cursor.getString(cursor.getColumnIndex(Schema.OccasionMatching.Cols.STYLE));
+		ItemCategoryEnum category = ItemCategoryEnum.values()[cursor.getInt(cursor.getColumnIndex(Schema.OccasionMatching.Cols.CATEGORY))];
+		ItemStyleEnum style = ItemStyleEnum.values()[cursor.getInt(cursor.getColumnIndex(Schema.OccasionMatching.Cols.STYLE))];
 		int formal = cursor.getInt(cursor.getColumnIndex(Schema.OccasionMatching.Cols.FORMAL));
 		int semiFormal = cursor.getInt(cursor.getColumnIndex(Schema.OccasionMatching.Cols.SEMI_FORMAL));
 		int casual = cursor.getInt(cursor.getColumnIndex(Schema.OccasionMatching.Cols.CASUAL));
@@ -541,10 +541,10 @@ public class ItemDatabaseHelper {
 	 * param UserProfile must have a valid id field 
 	 */
 	public void updateUserProfileRecord(UserProfile usr) {
-		Log.i(LOG_TAG, "updateRecord" + usr.toString());
+		//Log.i(LOG_TAG, "updateRecord" + usr.toString());
 		String[] whereArgs = { String.valueOf(usr.getId()) };
-		Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_USER_PROFILE, 
-				getContentValuesFromUserProfile(usr), WHERE_CLAUSE, whereArgs));
+		//Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_USER_PROFILE, 
+		//		getContentValuesFromUserProfile(usr), WHERE_CLAUSE, whereArgs));
 	}
 
 	public Cursor getCursorToAllUserProfileRecord() {
@@ -671,16 +671,16 @@ public class ItemDatabaseHelper {
 	 */
 	public void updateItemDataRecord(ItemData item) {
 		// Update
-		Log.i(LOG_TAG, "updateRecord" + item.toString());
+		//Log.i(LOG_TAG, "updateRecord" + item.toString());
 		String[] whereArgs = { String.valueOf(item.getId()) };
-		Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_ITEM, 
-				getContentValuesFromItemData(item), WHERE_CLAUSE, whereArgs));
+		//Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_ITEM, 
+		//		getContentValuesFromItemData(item), WHERE_CLAUSE, whereArgs));
 		
 		// Verify
 		Cursor c = queryItemFromId(item.getId());
 		ArrayList<ItemData> it = getItemDataArrayListFromCursor(c);
 		if (it.size() > 0) {
-			Log.i(LOG_TAG, "updateRecord" + it.get(0).toString());	
+			//Log.i(LOG_TAG, "updateRecord" + it.get(0).toString());	
 		}
 	}
 	
@@ -902,7 +902,7 @@ public class ItemDatabaseHelper {
 			.dirty(Boolean.parseBoolean(dirty))
 			.wornTime(wornTime)
 			.maxWornTime(maxWornTime)
-			.build();
+			.buildFromDatabase();
 	}
 	
 	/*
@@ -1118,7 +1118,7 @@ public class ItemDatabaseHelper {
 	public List<OutfitHistoryData> getOutfitHistoryDataInTimeRange(long timeStart, long timeEnd) {
 		ArrayList<OutfitHistoryData> result = new ArrayList<OutfitHistoryData>();
 		Cursor c = queryOutfitHistoryDataInTimeRange(timeStart, timeEnd);
-		Log.i(LOG_TAG, DatabaseUtils.dumpCursorToString(c));
+		//Log.i(LOG_TAG, DatabaseUtils.dumpCursorToString(c));
 		if (c != null) {
 			if (c.moveToFirst()) {
 				do {
@@ -1339,7 +1339,7 @@ public class ItemDatabaseHelper {
 			while ((line = reader.readLine()) != null) {
 				String[] parts = line.split(",");
 				OccasionMatchingRecord omr = new OccasionMatchingRecord(
-						parts[0], parts[1], Integer.parseInt(parts[2]), 
+						ItemCategoryEnum.valueOf(parts[0]), ItemStyleEnum.valueOf(parts[1]), Integer.parseInt(parts[2]), 
 						Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), 
 						Integer.parseInt(parts[5]), Integer.parseInt(parts[6]));
 				saveOccasionMatchingRecord(omr, TABLE_OCCASION_MATCHING_MALE);
@@ -1363,7 +1363,7 @@ public class ItemDatabaseHelper {
 			while ((line = reader.readLine()) != null) {
 				String[] parts = line.split(",");
 				OccasionMatchingRecord omr = new OccasionMatchingRecord(
-						parts[0], parts[1], Integer.parseInt(parts[2]), 
+						ItemCategoryEnum.valueOf(parts[0]), ItemStyleEnum.valueOf(parts[1]), Integer.parseInt(parts[2]), 
 						Integer.parseInt(parts[3]), Integer.parseInt(parts[4]), 
 						Integer.parseInt(parts[5]), Integer.parseInt(parts[6]));
 				saveOccasionMatchingRecord(omr, TABLE_OCCASION_MATCHING_FEMALE);
