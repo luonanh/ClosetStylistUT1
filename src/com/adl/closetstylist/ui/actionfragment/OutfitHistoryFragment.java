@@ -174,7 +174,7 @@ public class OutfitHistoryFragment extends ActionFragment implements ActionBar.T
 
 		@Override
 		public Fragment getItem(int position) {
-			OutfitHistoryDataListFragment fragment = new OutfitHistoryDataListFragment(position);
+			OutfitHistoryDataListFragment fragment = new OutfitHistoryDataListFragment();
 			return fragment;
 		}
 

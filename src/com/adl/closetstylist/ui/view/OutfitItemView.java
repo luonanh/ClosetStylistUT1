@@ -52,5 +52,18 @@ public class OutfitItemView extends LinearLayout {
 	public ImageView getImage3() {
 		return image3;
 	}
+	
+	public void showImage1(ItemData item) {
+		new ImageSubSampler(this.getContext()).subSampleCroppedUri(item, image1, this.getContext());
+	}
+
+	public void showImage2(ItemData item) {
+		new ImageSubSampler(this.getContext()).subSampleCroppedUri(item, image2, this.getContext());
+	}
+	
+	public void showImage3(ItemData item) {
+		new ImageSubSampler(this.getContext()).subSampleCroppedUri(item, image3, this.getContext());
+	}
+ 
 
 }

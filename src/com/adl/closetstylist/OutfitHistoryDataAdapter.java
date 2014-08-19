@@ -36,12 +36,15 @@ public class OutfitHistoryDataAdapter extends CursorAdapter {
 			
 			v.setTag(outfitHistoryData);
 			
-			v.getImage1().setImageResource(R.drawable.face_img_placeholder);
+			// Populate top image
+			v.showImage1(outfitHistoryData.getOutfit().getTop());
 
-			v.getImage2().setImageResource(R.drawable.face_img_placeholder);
+			// Populate bottom image
+			v.showImage2(outfitHistoryData.getOutfit().getBottom());
 			
 			if (outfitHistoryData.getOutfit().isOuterExist()) {
-				v.getImage3().setImageResource(R.drawable.face_img_placeholder);
+				// Populate outer image
+				v.showImage3(outfitHistoryData.getOutfit().getOuter());
 			}
 		}
 	}

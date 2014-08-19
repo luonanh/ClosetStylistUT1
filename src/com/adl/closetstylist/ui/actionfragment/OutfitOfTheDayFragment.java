@@ -815,21 +815,4 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 					Toast.LENGTH_SHORT).show();
 		}
 	}
-	
-	/**
-	 * Assumption: the upper image must be top and the side image is outer
-	 */
-	private ItemData getCurrentTop() {
-		ItemData t = null;
-		
-		if (null != outfit) {
-			ItemData t2 = outfit.get(outfitIndex).getTop(); // current outfit's Top
-			if (null != t2) {
-				
-			}
-			//upperImageIsTop
-			
-		}
-		return t;
-	}
 }

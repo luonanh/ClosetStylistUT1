@@ -31,30 +31,23 @@ public class OutfitHistoryDataListFragment extends Fragment {
 	
 	private ItemDatabaseHelper itemDatabaseHelper;
 	private Cursor cursorToOutfitHistoryDataList;
-	private ListAdapter ohdAdapter;
-
-	private int position;
-	
-	public OutfitHistoryDataListFragment(int position) {
-		this.position = position;
-	}
+	private OutfitHistoryDataAdapter ohdAdapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
 		itemDatabaseHelper = ItemDatabaseHelper.getInstance(getActivity());
-//		cursorToOutfitHistoryDataList = itemDatabaseHelper
-//				.queryOutfitHistoryDataInTimeRange(
-//						TimeHelper.getStartOfToday(), 
-//						TimeHelper.getEndOfToday());
-//		ohdAdapter = new OutfitHistoryDataAdapter(getActivity(), 
-//				cursorToOutfitHistoryDataList);
-		
-		//please change this with your OutfitHistoryDataAdapter
-		ohdAdapter = new OutfitArrayAdapter(getActivity());
+		cursorToOutfitHistoryDataList = itemDatabaseHelper
+				.queryOutfitHistoryDataInTimeRange(
+						TimeHelper.getStartOfToday(), 
+						TimeHelper.getEndOfToday());
+		ohdAdapter = new OutfitHistoryDataAdapter(getActivity(), 
+				cursorToOutfitHistoryDataList);
 
-		View rootView = inflater.inflate(R.layout.fragment_my_closet_garment_category, container,
+		View rootView = inflater.inflate(
+				R.layout.fragment_my_closet_garment_category, 
+				container,
 				false);
 		ListView listView = (ListView) rootView;
 		listView.setAdapter(ohdAdapter);
