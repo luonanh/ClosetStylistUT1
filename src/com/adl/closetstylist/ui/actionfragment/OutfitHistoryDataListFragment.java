@@ -33,6 +33,15 @@ public class OutfitHistoryDataListFragment extends Fragment {
 	private Cursor cursorToOutfitHistoryDataList;
 	private OutfitHistoryDataAdapter ohdAdapter;
 	
+	private int position;
+	
+	public static OutfitHistoryDataListFragment newInstance(int position) {
+		OutfitHistoryDataListFragment result = new OutfitHistoryDataListFragment();
+		result.position = position;
+		return result;
+	}
+	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

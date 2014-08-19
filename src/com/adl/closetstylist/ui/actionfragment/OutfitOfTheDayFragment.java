@@ -251,31 +251,32 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		SubMenu occasionMenu = menu.addSubMenu(Menu.NONE, 1, Menu.NONE, R.string.menu_occasion);
+		SubMenu occasionMenu = menu.addSubMenu(Menu.NONE, Menu.NONE, Menu.NONE, R.string.menu_occasion);
 		occasionMenu.setIcon(R.drawable.icn_ab_ocassion);
-		menu.findItem(1).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		inflater.inflate(R.menu.menu_outfit_of_the_day, occasionMenu);
+		occasionMenu.getItem().setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		
+		//populate menu item for occasion
+		for (OccasionEnum occasion : OccasionEnum.values())
+			occasionMenu.add(Menu.NONE, occasion.getId(), Menu.NONE, occasion.name());
+		
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menu_occasion_1:
-			Toast.makeText(getActivity(), "occasion_1", Toast.LENGTH_LONG).show();
+		OccasionEnum occasion = OccasionEnum.getById(item.getItemId());
+		if (occasion != null) {
+			switch (occasion) {
+			case Formal:
+			case Casual:
+			case Day_Out:
+			case Night_Out:
+			case Semi_Formal:
+				Toast.makeText(getActivity(), occasion.name(), Toast.LENGTH_SHORT).show();
+			}
 			return true;
-		case R.id.menu_occasion_2:
-			Toast.makeText(getActivity(), "occasion_2", Toast.LENGTH_LONG).show();
-			return true;
-		case R.id.menu_occasion_3:
-			Toast.makeText(getActivity(), "occasion_3", Toast.LENGTH_LONG).show();
-			return true;
-		case R.id.menu_occasion_4:
-			Toast.makeText(getActivity(), "occasion_4", Toast.LENGTH_LONG).show();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+		}else
+		return super.onOptionsItemSelected(item);
 	}	
 	
 	private void initLeftRightButtonInTopAndBottomPart(final View rootView) {
