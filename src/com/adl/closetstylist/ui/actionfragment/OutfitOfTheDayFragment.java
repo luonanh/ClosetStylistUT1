@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -640,13 +642,13 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 				outfitIndex = 0; // position to keep track of
 				Log.i(TAG, "Total number of items in the List of Outfit is: " + outfit.size());
 				if (0 == outfit.size()) {
-					Toast.makeText(context, R.string.outfit_message_no_top, 
+					Toast.makeText(context, R.string.outfit_message_no_outfit, 
 							Toast.LENGTH_SHORT).show();						
 				} else {
 					updateTopBottomOuter();				
 				}
 			} else {
-				Toast.makeText(context, R.string.outfit_message_no_outfit, 
+				Toast.makeText(context, "onPostExecute returns null", 
 						Toast.LENGTH_SHORT).show();
 			}
 			
@@ -766,14 +768,7 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 				swapTopAndOuterInUpperImage();
 			}
 			
-		//OutfitHistoryData
 			Outfit.OutfitBuilder outfitBuilder = null;
-			
-			/*
-			.bottom(bottom.getItemData())
-			.score(totalScore)
-			.build();
-			*/
 			
 			// topItem is the current "Top" ItemData
 			if (null != topItem) {
@@ -799,9 +794,10 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 				outfitBuilder.outer(outerItem);
 			}
 		
-			//Outfit o = outfitBuilder.build();
 			OutfitHistoryData ohd = new OutfitHistoryData(outfitBuilder.build());
 			itemDatabaseHelper.saveOutfitHistoryDataRecord(ohd);
+			
+			/* Debug code
 			Toast.makeText(context, "This outfit is chosen", 
 					Toast.LENGTH_SHORT).show();
 
@@ -812,8 +808,16 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 			for (OutfitHistoryData ohd2: temp) {
 				Log.i(TAG, ohd2.toString());
 			}
-			Toast.makeText(context, "Verify this outfit was written to database", 
-					Toast.LENGTH_SHORT).show();
+			
+			Toast.makeText(context, "Outfit was marked as worn", Toast.LENGTH_SHORT).show();
+			*/
+			
+			// Launch OutfitHistoryFragment
+			ActionDescriptor actionDescriptor = ActionDescriptor.OutfitHistory;
+			Fragment actionFragment = ActionFragment.getNewActionFragment(actionDescriptor);
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction()
+					.replace(R.id.container, actionFragment).addToBackStack(null).commit();
 
 		} else {
 			Toast.makeText(context, R.string.outfit_message_no_outfit, 

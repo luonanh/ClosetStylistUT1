@@ -155,6 +155,7 @@ public class ItemData implements Parcelable {
 		//"Cotton_Or_Cotton_Blend", "Denim", "Down", "Jersey_Knit", "Leather", 
 		//"Linen", "Nylon", "Performance", "Polyester", "Silk", "Spandex", 
 		//"Wool_Or_Wool_Blend"
+		/*
 		if ((this.material == ItemMaterialEnum.Nylon) 
 				|| (this.material == ItemMaterialEnum.Spandex)) {
 			this.tempMax = 70;
@@ -166,17 +167,23 @@ public class ItemData implements Parcelable {
 		} else {
 			this.tempMax = 999; //Integer.MAX_VALUE;
 		}
+		*/
+		this.tempMax = 999; //Integer.MAX_VALUE;
 	}
 
 	protected void setTempMinFromMaterial() {
+		/*
 		if (this.material == ItemMaterialEnum.Silk) {
 			this.tempMin = 50;
 		} else {
 			this.tempMin = -999; //Integer.MIN_VALUE;
 		}
+		*/
+		this.tempMin = -999; //Integer.MIN_VALUE;
 	}
 
 	private void setTempMaxFromStyleMale() {
+		/*
 		if ((this.style == ItemStyleEnum.Dress_Shirt)
 				&& (this.tempMax > 75)) {
 			this.tempMax = 75;
@@ -191,32 +198,28 @@ public class ItemData implements Parcelable {
 				&& (this.tempMax > 40)) {
 			this.tempMax = 40;
 		}
+		*/
+		if ((this.style == ItemStyleEnum.Coat_And_Jacket_Light)
+				&& (this.tempMax > 75)) {
+			this.tempMax = 75;
+		} else if ((this.style == ItemStyleEnum.Coat_And_Jacket_Heavy)
+				&& (this.tempMax > 40)) {
+			this.tempMax = 40;
+		}
+		
 	}
 	
 	private void setTempMinFromStyleMale() {
 		if ((this.style == ItemStyleEnum.Shorts)
-				&& (this.tempMin < 65)) {
-			this.tempMin = 65;
-		} else if ((this.style == ItemStyleEnum.T_Shirt_Short_Sleeve)
 				&& (this.tempMin < 60)) {
 			this.tempMin = 60;
 		}
 	}
 
 	private void setTempMaxFromStyleFemale() {
-		if ((this.style == ItemStyleEnum.Vest)
-				&& (this.tempMax > 70)) {
-			this.tempMax = 70;
-		} else if (((this.style == ItemStyleEnum.Pants)
-				|| (this.style == ItemStyleEnum.Jeans)
-				|| (this.style == ItemStyleEnum.Blouse_Short_Sleeve)
-				|| (this.style == ItemStyleEnum.T_Shirt_Long_Sleeve)
-				|| (this.style == ItemStyleEnum.Pull_Over)
-				|| (this.style == ItemStyleEnum.Cardigan)
-				|| (this.style == ItemStyleEnum.Sweater_And_Sweatshirt)
-				|| (this.style == ItemStyleEnum.Coat_And_Jacket_Light))
-				&& (this.tempMax > 65)) {
-			this.tempMax = 65;
+		if ((this.style == ItemStyleEnum.Coat_And_Jacket_Light)
+				&& (this.tempMax > 75)) {
+			this.tempMax = 75;
 		} else if ((this.style == ItemStyleEnum.Coat_And_Jacket_Heavy)
 				&& (this.tempMax > 40)) {
 			this.tempMax = 40;
@@ -224,17 +227,7 @@ public class ItemData implements Parcelable {
 	}
 	
 	private void setTempMinFromStyleFemale() {
-		if ((this.style == ItemStyleEnum.Tank_Camisoles)
-				&& (this.tempMin < 70)) {
-			this.tempMin = 70;
-		} else if (((this.style == ItemStyleEnum.Shorts)
-				|| (this.style == ItemStyleEnum.Skirts)
-				|| (this.style == ItemStyleEnum.Blouse_Sleeveless)
-				|| (this.style == ItemStyleEnum.Tunic))
-				&& (this.tempMin < 65)) {
-			this.tempMin = 65;
-		} else if (((this.style == ItemStyleEnum.Blouse_Long_Sleeve)
-				|| (this.style == ItemStyleEnum.T_Shirt_Short_Sleeve))
+		if (((this.style == ItemStyleEnum.Shorts) || (this.style == ItemStyleEnum.Skirts))
 				&& (this.tempMin < 60)) {
 			this.tempMin = 60;
 		}

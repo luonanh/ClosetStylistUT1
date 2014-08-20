@@ -134,8 +134,8 @@ public class OpenWeatherMapProvider implements WeatherProviderInterface {
 			Log.i(LOG_TAG, "w.temperature.getTemp() - " 
 					+ String.valueOf(w.temperature.getTemp()));
 			WeatherInfo wi = new WeatherInfo(
+					kelvinToFahrenheit(w.temperature.getMinTemp()),
 					kelvinToFahrenheit(w.temperature.getMaxTemp()), 
-					kelvinToFahrenheit(w.temperature.getMinTemp()), 
 					kelvinToFahrenheit(w.temperature.getTemp()),
 					place);
 			Log.i(LOG_TAG, "kelvinToFahrenheit(w.temperature.getMaxTemp()) - " 
