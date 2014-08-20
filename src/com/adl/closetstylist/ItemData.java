@@ -82,6 +82,7 @@ public class ItemData implements Parcelable {
 		this.material = builder.material;
 		this.style = builder.style;
 		this.dirty = builder.dirty;
+		this.wornTime = builder.wornTime;
 		setMaxWornTimeFromStyle();
 		//setTempMinFromMaterial();
 		//setTempMaxFromMaterial();

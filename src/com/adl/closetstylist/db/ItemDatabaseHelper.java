@@ -543,8 +543,14 @@ public class ItemDatabaseHelper {
 	public void updateUserProfileRecord(UserProfile usr) {
 		//Log.i(LOG_TAG, "updateRecord" + usr.toString());
 		String[] whereArgs = { String.valueOf(usr.getId()) };
-		//Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_USER_PROFILE, 
-		//		getContentValuesFromUserProfile(usr), WHERE_CLAUSE, whereArgs));
+//		Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_USER_PROFILE, 
+//				getContentValuesFromUserProfile(usr), WHERE_CLAUSE, whereArgs));
+		database.update(
+				TABLE_USER_PROFILE,
+				getContentValuesFromUserProfile(usr), 
+				WHERE_CLAUSE, 
+				whereArgs);
+
 	}
 
 	public Cursor getCursorToAllUserProfileRecord() {
@@ -673,8 +679,13 @@ public class ItemDatabaseHelper {
 		// Update
 		//Log.i(LOG_TAG, "updateRecord" + item.toString());
 		String[] whereArgs = { String.valueOf(item.getId()) };
-		//Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_ITEM, 
-		//		getContentValuesFromItemData(item), WHERE_CLAUSE, whereArgs));
+//		Log.i(LOG_TAG, "Rows updated: " + database.update(TABLE_ITEM, 
+//				getContentValuesFromItemData(item), WHERE_CLAUSE, whereArgs));
+		database.update(
+				TABLE_ITEM, 
+				getContentValuesFromItemData(item), 
+				WHERE_CLAUSE, 
+				whereArgs);
 		
 		// Verify
 		Cursor c = queryItemFromId(item.getId());
@@ -711,6 +722,7 @@ public class ItemDatabaseHelper {
 		
 		Cursor c = qb.query(database, null, null, whereArgs, null, null,
 				orderBy);
+		//Log.i(LOG_TAG, DatabaseUtils.dumpCursorToString(c));
 		return c;
 	}
 

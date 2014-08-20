@@ -37,7 +37,6 @@ import com.adl.closetstylist.ItemData;
 import com.adl.closetstylist.Outfit;
 import com.adl.closetstylist.OutfitHistoryData;
 import com.adl.closetstylist.R;
-import com.adl.closetstylist.TimeHelper;
 import com.adl.closetstylist.UserProfile;
 import com.adl.closetstylist.WeatherInfo;
 import com.adl.closetstylist.db.ItemDatabaseHelper;
