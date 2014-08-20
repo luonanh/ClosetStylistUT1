@@ -20,16 +20,16 @@
             android:id="@+id/weather1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true" 
-            android:background="@color/app_background">
+            android:layout_alignParentLeft="true"
+            android:background="@color/app_background" >
 
             <ImageView
                 android:id="@+id/icn_pin_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:contentDescription="place icon"
                 android:baselineAlignBottom="true"
+                android:contentDescription="place icon"
                 android:gravity="top"
                 android:padding="0dp"
                 android:src="@drawable/icn_pin_location" />
@@ -38,8 +38,8 @@
                 android:id="@+id/weather_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/icn_pin_location"
                 android:layout_alignBaseline="@id/icn_pin_location"
+                android:layout_toRightOf="@id/icn_pin_location"
                 android:gravity="center_horizontal"
                 android:paddingLeft="5dp"
                 android:text="Chicago, IL"
@@ -89,7 +89,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
-            
+
             <TextView
                 android:id="@+id/weather_current_temp"
                 android:layout_width="wrap_content"
@@ -101,17 +101,16 @@
                 android:textSize="35sp"
                 android:textStyle="bold" />
 
-           <ImageView
+            <ImageView
                 android:id="@+id/weather_current_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/weather_current_temp"
                 android:layout_alignBaseline="@id/weather_current_temp"
-                android:paddingRight="5dp"
+                android:layout_toLeftOf="@id/weather_current_temp"
                 android:baselineAlignBottom="true"
+                android:paddingRight="5dp"
                 android:src="@drawable/icn_sunshowers" />
         </RelativeLayout>
-        
     </RelativeLayout>
 
     <LinearLayout
@@ -196,33 +195,77 @@
         android:background="@color/drawer_divider_color" />
 
     <LinearLayout
-        android:id="@+id/action_mylaundrybag"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="3"
+        android:layout_weight="2.5"
         android:background="@color/app_background"
-        android:orientation="vertical" >
+        android:gravity="top"
+        android:orientation="horizontal" >
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/action_mylaundrybag"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
             android:background="@color/app_background"
-            android:contentDescription="@string/mylaundrybag"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/app_background"
+                android:contentDescription="@string/mylaundrybag"
+                android:gravity="top"
+                android:padding="0dp"
+                android:src="@drawable/icn_laundry_bag" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/app_background"
+                android:gravity="center_horizontal"
+                android:paddingBottom="20dp"
+                android:singleLine="false"
+                android:text="@string/mylaundrybag"
+                android:textColor="@android:color/white"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
+            android:background="@color/drawer_divider_color" />
+
+        <LinearLayout
+            android:id="@+id/action_outfithistory"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/app_background"
             android:gravity="top"
-            android:padding="0dp"
-            android:src="@drawable/icn_laundry_bag" />
+            android:orientation="vertical" >
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/app_background"
-            android:gravity="center_horizontal"
-            android:paddingBottom="20dp"
-            android:singleLine="false"
-            android:text="@string/mylaundrybag"
-            android:textColor="@android:color/white"
-            android:textSize="30sp" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/app_background"
+                android:contentDescription="@string/mycloset"
+                android:gravity="top"
+                android:padding="0dp"
+                android:src="@drawable/icn_outfit_history" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/app_background"
+                android:gravity="center_horizontal"
+                android:singleLine="false"
+                android:text="@string/outfit_history"
+                android:textColor="@android:color/white"
+                android:textSize="30sp" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

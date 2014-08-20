@@ -135,7 +135,7 @@ public class NavigationDrawerFragment extends Fragment {
 
 		// populate action items to drawer
 		mDrawerListView.setAdapter(new ActionArrayAdapter(getActionBar()
-				.getThemedContext(), ActionDescriptor.values()));
+				.getThemedContext(), ActionDescriptor.getDisplayableActions()));
 		
 		mDrawerListView.setItemChecked(mCurrentSelectedAction.getPostion(), true);
 		

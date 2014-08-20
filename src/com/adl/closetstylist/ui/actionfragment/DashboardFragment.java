@@ -139,6 +139,19 @@ public class DashboardFragment extends ActionFragment implements PlaceRecordCont
 			}
 		});
 		
+		View myOutfitHistory = rootView.findViewById(R.id.action_outfithistory);
+		myOutfitHistory.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ActionDescriptor actionDescriptor = ActionDescriptor.OutfitHistory;
+				Fragment actionFragment = ActionFragment.getNewActionFragment(actionDescriptor);
+				FragmentManager fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction()
+						.replace(R.id.container, actionFragment).addToBackStack(null).commit();
+			}
+		});
+		
 		cityState = (TextView) rootView.findViewById(R.id.weather_location);
 		minTemp = (TextView) rootView.findViewById(R.id.weather_min_temp);
 		maxTemp = (TextView) rootView.findViewById(R.id.weather_max_temp);
