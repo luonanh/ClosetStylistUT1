@@ -264,19 +264,23 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		OccasionEnum occasion = OccasionEnum.getById(item.getItemId());
-		if (occasion != null) {
-			switch (occasion) {
+		OccasionEnum oe = OccasionEnum.getById(item.getItemId());
+		if (oe != null) {
+			switch (oe) {
 			case Formal:
 			case Casual:
 			case Day_Out:
 			case Night_Out:
 			case Semi_Formal:
-				Toast.makeText(getActivity(), occasion.name(), Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), oe.name(), Toast.LENGTH_SHORT).show();
+				outfitIndex = 0;
+				Log.i(TAG, "The chosen OccasionEnum is: " + oe.toString());
+				new RankOutfitTask().execute(oe);
+				break;
 			}
 			return true;
-		}else
-		return super.onOptionsItemSelected(item);
+		} else
+			return super.onOptionsItemSelected(item);
 	}	
 	
 	private void initLeftRightButtonInTopAndBottomPart(final View rootView) {
@@ -803,8 +807,8 @@ public class OutfitOfTheDayFragment extends ActionFragment {
 
 			List<OutfitHistoryData> temp 
 				= itemDatabaseHelper.getOutfitHistoryDataInTimeRange(
-						TimeHelper.getStartOfToday(), 
-						TimeHelper.getEndOfToday());
+						TimeHelper.getStartOfTodayInMillis(), 
+						TimeHelper.getEndOfTodayInMillis());
 			for (OutfitHistoryData ohd2: temp) {
 				Log.i(TAG, ohd2.toString());
 			}

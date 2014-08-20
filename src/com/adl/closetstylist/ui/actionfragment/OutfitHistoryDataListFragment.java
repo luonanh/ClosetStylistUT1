@@ -1,6 +1,7 @@
 package com.adl.closetstylist.ui.actionfragment;
 
-import android.content.Intent;
+import java.util.Date;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,21 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Toast;
+import android.widget.ListView;
 
-import com.adl.closetstylist.ItemData;
 import com.adl.closetstylist.OutfitHistoryData;
 import com.adl.closetstylist.OutfitHistoryDataAdapter;
 import com.adl.closetstylist.R;
 import com.adl.closetstylist.TimeHelper;
 import com.adl.closetstylist.db.ItemDatabaseHelper;
-import com.adl.closetstylist.db.Schema;
 import com.adl.closetstylist.ui.ActionDescriptor;
-import com.adl.closetstylist.ui.EditItemActivity;
-import com.adl.closetstylist.ui.EditItemActivity.ActionType;
 
 public class OutfitHistoryDataListFragment extends Fragment {
 	private static final String TAG = OutfitHistoryDataListFragment.class.getCanonicalName();
@@ -32,15 +27,24 @@ public class OutfitHistoryDataListFragment extends Fragment {
 	private ItemDatabaseHelper itemDatabaseHelper;
 	private Cursor cursorToOutfitHistoryDataList;
 	private OutfitHistoryDataAdapter ohdAdapter;
-	
-	private int position;
+	private int tabPosition; 	// tab position in OutfitHistoryFragment
+	private long tabTime;		// time in milliseconds associated with the date of the tab in OutfitHistoryFragment
 	
 	public static OutfitHistoryDataListFragment newInstance(int position) {
 		OutfitHistoryDataListFragment result = new OutfitHistoryDataListFragment();
-		result.position = position;
+		result.tabPosition = position;
+		result.tabTime = tabPositionToTime(result);
 		return result;
-	}
+	}	
 	
+	/**
+	 * This method convert the tab position in the OutfitHistoryFragment to
+	 * the corresponding time of the date in milliseconds
+	 * @return
+	 */
+	private static long tabPositionToTime(OutfitHistoryDataListFragment ohdl) {
+		return TimeHelper.getTimeNDaysAgo(ohdl.tabPosition);
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,8 +53,8 @@ public class OutfitHistoryDataListFragment extends Fragment {
 		itemDatabaseHelper = ItemDatabaseHelper.getInstance(getActivity());
 		cursorToOutfitHistoryDataList = itemDatabaseHelper
 				.queryOutfitHistoryDataInTimeRange(
-						TimeHelper.getStartOfToday(), 
-						TimeHelper.getEndOfToday());
+						TimeHelper.getStartOfDayInMillis(new Date(this.tabTime)), 
+						TimeHelper.getEndOfDayInDateInMillis(new Date(this.tabTime)));
 		ohdAdapter = new OutfitHistoryDataAdapter(getActivity(), 
 				cursorToOutfitHistoryDataList);
 

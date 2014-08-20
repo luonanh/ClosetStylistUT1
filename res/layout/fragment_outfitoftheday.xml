@@ -61,7 +61,7 @@
                 android:id="@+id/outfitoftheday_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Score is..."/>
+                android:text="Score"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -87,8 +87,7 @@
                 android:layout_toLeftOf="@+id/btn_sliding_right"
                 android:layout_toRightOf="@id/btn_sliding_left"
                 android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/sample_top" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@id/btn_sliding_right"
@@ -107,8 +106,7 @@
                 android:layout_marginBottom="0dp"
                 android:layout_marginRight="0dp"
                 android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/sample_outer" />
+                android:scaleType="fitCenter" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -134,8 +132,7 @@
                 android:layout_toLeftOf="@id/btn_sliding_right"
                 android:layout_toRightOf="@id/btn_sliding_left"
                 android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/sample_pant" />
+                android:scaleType="fitCenter" />
 
             <ImageButton
                 android:id="@id/btn_sliding_right"
