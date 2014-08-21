@@ -584,7 +584,7 @@ public class ItemDatabaseHelper {
 	}
 
 	/*
-	 * valid id field in ItemData
+	 * valid id field in UserProfile
 	 */
 	public static ContentValues getContentValuesFromUserProfile(UserProfile usr) {
 		ContentValues c = new ContentValues();
@@ -1318,12 +1318,19 @@ public class ItemDatabaseHelper {
 		}
 	}
 
+	/**
+	 * Clear user related information including
+	 * 	- Profile
+	 *  - Closet
+	 */
 	public void deleteDatabase() {
 		deleteMyCloset();
 		deleteUserProfile();
+		/* The following tables MUST NOT be cleared because it won't be populated again
 		deleteOccasionMatchingRecordTable();
 		deletePairMatchingRecordTable();
 		deleteColorMatchingRecordTable();
+		*/
 	}
 	
 	/**

@@ -1,15 +1,13 @@
 package com.adl.closetstylist;
 
-import com.adl.closetstylist.db.ItemDatabaseHelper;
-import com.adl.closetstylist.ui.view.ImageAndTwoLineItem;
-import com.adl.closetstylist.ui.view.OutfitItemView;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
+
+import com.adl.closetstylist.db.ItemDatabaseHelper;
+import com.adl.closetstylist.ui.view.OutfitItemView;
 
 public class OutfitHistoryDataAdapter extends CursorAdapter {
 	Context context = null;
@@ -47,7 +45,6 @@ public class OutfitHistoryDataAdapter extends CursorAdapter {
 				// Populate outer image
 				v.showImage3(outfitHistoryData.getOutfit().getOuter());
 			}
-			
 		}
 	}
 
