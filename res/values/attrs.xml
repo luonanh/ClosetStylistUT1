@@ -6,6 +6,10 @@
         <attr name="sub_text" format="string" />
     </declare-styleable>
     
+    <declare-styleable name="SquareImageView">
+        <attr name="fixedAlong" format="string" />
+    </declare-styleable>
+    
     <color name="text_tab_color">#36495C</color>
     <color name="app_background">#36495C</color>
     <color name="drawer_divider_color">#486480</color>

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:choiceMode="singleChoice"
-    android:divider="#486480"
+    android:divider="@color/drawer_divider_color"
     android:paddingTop="10dp"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"

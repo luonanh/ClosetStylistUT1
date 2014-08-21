@@ -1,6 +1,7 @@
-<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:SquareImageView="http://schemas.android.com/apk/res/com.adl.closetstylist" >
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/clickZone"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -8,36 +9,32 @@
         android:layout_marginTop="10dp"
         android:orientation="horizontal" >
 
-        <ImageView
+        <com.adl.closetstylist.ui.view.SquareImageView
             android:id="@+id/image1"
-            android:layout_width="60dp"
+            android:layout_width="0dp"
             android:layout_height="60dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginRight="6dip"
-            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            SquareImageView:fixedAlong="width"
             android:scaleType="fitCenter" />
 
-        <ImageView
+        <com.adl.closetstylist.ui.view.SquareImageView
             android:id="@+id/image2"
-            android:layout_width="60dp"
+            android:layout_width="0dp"
             android:layout_height="60dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginRight="6dip"
-            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            SquareImageView:fixedAlong="width"
             android:scaleType="fitCenter" />
 
-        <ImageView
+        <com.adl.closetstylist.ui.view.SquareImageView
             android:id="@+id/image3"
-            android:layout_width="60dp"
+            android:layout_width="0dp"
             android:layout_height="60dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginRight="6dip"
-            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            SquareImageView:fixedAlong="width"
             android:scaleType="fitCenter" />
-
-    </RelativeLayout>
+    </LinearLayout>
 
 </merge>

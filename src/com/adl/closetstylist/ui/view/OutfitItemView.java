@@ -38,7 +38,7 @@ public class OutfitItemView extends LinearLayout {
         image1 = (ImageView) view.findViewById(R.id.image1);
         image2 = (ImageView) view.findViewById(R.id.image2);
         image3 = (ImageView) view.findViewById(R.id.image3);
-
+        
     }
 
 	public ImageView getImage1() {

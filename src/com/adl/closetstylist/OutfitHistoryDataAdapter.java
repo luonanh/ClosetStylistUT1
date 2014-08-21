@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 
 public class OutfitHistoryDataAdapter extends CursorAdapter {
 	Context context = null;
@@ -46,6 +47,7 @@ public class OutfitHistoryDataAdapter extends CursorAdapter {
 				// Populate outer image
 				v.showImage3(outfitHistoryData.getOutfit().getOuter());
 			}
+			
 		}
 	}
 
