@@ -9,7 +9,7 @@ import com.adl.closetstylist.R;
 public enum ActionDescriptor {
 	Dashboard(1, R.string.dashboard, R.drawable.icn_dashboard, ActionBar.NAVIGATION_MODE_STANDARD),
 	OutfitOfTheDay(2, R.string.outfitoftheday, R.drawable.icn_outfitofday, ActionBar.NAVIGATION_MODE_STANDARD),
-	OutfitHistory(6, R.string.outfit_history, R.drawable.icn_outfitofday, ActionBar.NAVIGATION_MODE_STANDARD),
+	OutfitHistory(6, R.string.outfit_history, R.drawable.icn_history, ActionBar.NAVIGATION_MODE_STANDARD),
 	MyCloset(3, R.string.mycloset, R.drawable.icn_mycloset, ActionBar.NAVIGATION_MODE_TABS),
 	MyLaundryBag(4, R.string.mylaundrybag, R.drawable.icn_laundry, ActionBar.NAVIGATION_MODE_STANDARD),
 	Settings(5, R.string.settings, R.drawable.icn_settings, ActionBar.NAVIGATION_MODE_STANDARD),

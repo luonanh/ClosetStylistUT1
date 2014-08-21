@@ -192,7 +192,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="WEAR"
+            android:text="@string/wear"
             android:textColor="@android:color/white"
             android:textSize="@dimen/actionbar_textsize"
             android:textStyle="bold" />
