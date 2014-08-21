@@ -1173,6 +1173,10 @@ public class ItemDatabaseHelper {
 		ohd.setTime(time);
 		return ohd;
 	}
+	
+	public void deleteOufitHistoryTable() {
+		database.delete(TABLE_OUTFIT_HISTORY, null, null);
+	}
 
 	/*
 	 * ************************************************************************
@@ -1322,10 +1326,12 @@ public class ItemDatabaseHelper {
 	 * Clear user related information including
 	 * 	- Profile
 	 *  - Closet
+	 *  - OufitHistory
 	 */
 	public void deleteDatabase() {
 		deleteMyCloset();
 		deleteUserProfile();
+		deleteOufitHistoryTable();
 		/* The following tables MUST NOT be cleared because it won't be populated again
 		deleteOccasionMatchingRecordTable();
 		deletePairMatchingRecordTable();
