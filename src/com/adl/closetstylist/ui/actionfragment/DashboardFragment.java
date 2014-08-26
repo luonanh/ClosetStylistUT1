@@ -15,8 +15,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +42,7 @@ import com.adl.closetstylist.weather.OpenWeatherMapMockFeed;
 import com.adl.closetstylist.weather.OpenWeatherMapProvider;
 import com.adl.closetstylist.weather.WeatherProviderInterface;
 
-public class DashboardFragment extends ActionFragment implements PlaceRecordContainerInterface {
+public class DashboardFragment extends ActionFragment implements PlaceRecordContainerInterface, OnRefreshListener {
 	private final static String TAG = DashboardFragment.class.getCanonicalName();
 	
 	// Location constants
@@ -74,6 +77,8 @@ public class DashboardFragment extends ActionFragment implements PlaceRecordCont
 	TextView date;
 	TextView rain;
 
+	private SwipeRefreshLayout swipeLayout;
+
 	/**
 	 * The fragment argument representing the section number for this fragment.
 	 */
@@ -99,6 +104,14 @@ public class DashboardFragment extends ActionFragment implements PlaceRecordCont
 				
 		View rootView = inflater.inflate(R.layout.fragment_dashboard,
 				container, false);
+		
+		//init slide down to refresh
+		swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorScheme(R.color.strip_background, 
+                R.color.app_background,R.color.strip_background, 
+                R.color.app_background);
+		
 
 		View outfitOfTheDay = rootView.findViewById(R.id.action_outfitoftheday);
 		outfitOfTheDay.setOnClickListener(new OnClickListener() {
@@ -377,5 +390,21 @@ public class DashboardFragment extends ActionFragment implements PlaceRecordCont
 		} else {
 			rain.setText("Sunny");
 		}
+	}
+
+	@Override
+	public void onRefresh() {
+		Toast.makeText(getActivity(), "refreshing", Toast.LENGTH_SHORT).show();
+		
+		/*
+		 * remember remove the following line, it is just an example. Note that,
+		 * swipeLayout.setRefreshing(false) must be called in UI Thread when 
+		 * you finish doing refresh task 
+		 */
+		new Handler().postDelayed(new Runnable() {
+            @Override public void run() {
+                swipeLayout.setRefreshing(false);
+            }
+        }, 5000);
 	}
 }
