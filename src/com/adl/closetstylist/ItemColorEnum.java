@@ -5,7 +5,29 @@ import java.util.Arrays;
 
 public enum ItemColorEnum {
 
-	Beige, Black, Blue, Brown, Gray, Green, Orange, Pink, Red, Violet, White, Yellow, Multicolor_Pattern;
+	Beige(R.drawable.beige),
+	Black(R.drawable.black),
+	Blue(R.drawable.blue),
+	Brown(R.drawable.brown),
+	Gray(R.drawable.gray),
+	Green(R.drawable.green),
+	Orange(R.drawable.orange),
+	Pink(R.drawable.pink), 
+	Red(R.drawable.red),
+	Violet(R.drawable.violet),
+	White(R.drawable.white),
+	Yellow(R.drawable.yello),
+	Multicolor_Pattern;
+	
+	private int colorImageResourceId;
+
+	private ItemColorEnum() {
+		
+	}
+	
+	private ItemColorEnum(int colorImageResourceId) {
+		this.colorImageResourceId = colorImageResourceId;
+	}
 	
 	public static ArrayList<String> getAllItemColorEnumString() {
 		ArrayList<ItemColorEnum> enumList = new ArrayList<ItemColorEnum>(Arrays.asList(ItemColorEnum.values()));
@@ -19,4 +41,9 @@ public enum ItemColorEnum {
 				
 		return result;
 	}
+
+	public int getColorImageResourceId() {
+		return colorImageResourceId;
+	}
+
 }

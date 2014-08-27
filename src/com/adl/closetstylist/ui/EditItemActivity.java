@@ -45,6 +45,7 @@ import com.adl.closetstylist.storage.StorageFactory;
 import com.adl.closetstylist.storage.StorageInterface;
 import com.adl.closetstylist.storage.sd.SDCardStorageFactory;
 import com.adl.closetstylist.ui.view.ArrayAdapter;
+import com.adl.closetstylist.ui.view.ImageArrayAdapter;
 
 public class EditItemActivity extends Activity {
 	public static final int DELETE_OK = 100;
@@ -78,7 +79,7 @@ public class EditItemActivity extends Activity {
 	private UserProfile up;
 	private ActionType actionType = null;
 
-	enum SpinnerValue {
+	public enum SpinnerValue {
 		CATEGORY(R.id.item_category, ItemCategoryEnum.getAllItemCategoryEnumString()),
 		MATERIAL(R.id.item_material, ItemMaterialEnum.getAllItemMaterialEnumString()),
 		COLOR(R.id.item_color, ItemColorEnum.getAllItemColorEnumString()),
@@ -342,10 +343,18 @@ public class EditItemActivity extends Activity {
 	private void initSpinner() {
 		for (SpinnerValue value : SpinnerValue.values()) {
 			Spinner field = (Spinner) findViewById(value.getId());
-			SpinnerAdapter adapter = new ArrayAdapter<String>(
-					getApplicationContext(),
-					R.layout.simple_spinner_dropdown_item, 
-					value.getValues());
+			SpinnerAdapter adapter = null;
+			if (value == SpinnerValue.COLOR) {
+				adapter = new ImageArrayAdapter<String>(
+						getApplicationContext(),
+						R.layout.simple_image_spinner_dropdown_item, 
+						value.getValues());
+			} else { 
+				adapter = new ArrayAdapter<String>(
+						getApplicationContext(),
+						R.layout.simple_spinner_dropdown_item, 
+						value.getValues());
+			}
 			field.setAdapter(adapter);
 			field.setSelection(adapter.getCount());
 		}

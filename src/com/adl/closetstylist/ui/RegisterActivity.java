@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.adl.closetstylist.DayEnum;
 import com.adl.closetstylist.GenderEnum;
+import com.adl.closetstylist.ItemColorEnum;
 import com.adl.closetstylist.PlaceRecord;
 import com.adl.closetstylist.R;
 import com.adl.closetstylist.UserProfile;
@@ -33,6 +34,7 @@ import com.adl.closetstylist.location.LocationToPostalCodeTask;
 import com.adl.closetstylist.location.MockLocationProvider;
 import com.adl.closetstylist.location.PostalCodeToLocationTask;
 import com.adl.closetstylist.ui.view.ArrayAdapter;
+import com.adl.closetstylist.ui.view.ImageArrayAdapter;
 
 public class RegisterActivity extends Activity implements LocationListener, PlaceRecordContainerInterface {
 	private final static String TAG = RegisterActivity.class.getCanonicalName();
@@ -182,10 +184,18 @@ public class RegisterActivity extends Activity implements LocationListener, Plac
 	private void initSpinner() {
 		for (SpinnerValue value : SpinnerValue.values()) {
 			Spinner spinner = (Spinner) findViewById(value.getId());
-			SpinnerAdapter adapter = new ArrayAdapter<String>(
-					getApplicationContext(),
-					R.layout.simple_spinner_dropdown_item, 
-					getResources().getStringArray(value.getArrayId()));
+			SpinnerAdapter adapter = null;
+			if (value == SpinnerValue.FAVOURITE_COLOR) {
+				adapter = new ImageArrayAdapter<String>(
+						getApplicationContext(),
+						R.layout.simple_image_spinner_dropdown_item, 
+						ItemColorEnum.getAllItemColorEnumString());
+			} else {
+				adapter = new ArrayAdapter<String>(
+						getApplicationContext(),
+						R.layout.simple_spinner_dropdown_item, 
+						getResources().getStringArray(value.getArrayId()));
+			}
 			spinner.setAdapter(adapter);
 			spinner.setSelection(adapter.getCount());
 		}
